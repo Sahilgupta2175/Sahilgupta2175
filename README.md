@@ -1,218 +1,169 @@
-# 🚀 Modern Portfolio Website - Sahil Gupta
+<div align="center">
 
-> A stunning, animated portfolio website showcasing full-stack development expertise with cutting-edge design and smooth animations.
+# 👋 Hi, I'm **Sahil Gupta**
 
-![Portfolio Preview](https://via.placeholder.com/800x400/06b6d4/ffffff?text=Modern+Portfolio+Website)
+### 🚀 Full-Stack Developer | MERN Stack Specialist | Problem Solver
 
-## 👨‍💻 About This Portfolio
+*Building responsive and scalable web applications with modern technologies*
 
-This is a complete redesign of a traditional GitHub README profile into a modern, interactive web experience. Built for **Sahil Gupta**, a passionate Full Stack Developer specializing in the MERN stack, this portfolio demonstrates both technical skills and design excellence.
+[![Profile Views](https://komarev.com/ghpvc/?username=sahilgupta2175&label=Profile%20views&color=06b6d4&style=for-the-badge)](https://github.com/sahilgupta2175)
+[![Twitter Follow](https://img.shields.io/twitter/follow/sahilgu82158785?logo=twitter&style=for-the-badge&color=1DA1F2)](https://twitter.com/sahilgu82158785)
 
-## ✨ Key Features
+</div>
 
-### 🎨 **Modern Design System**
-- Carefully crafted color palette with cyan and amber accents
-- Professional typography using Geist font family
-- Consistent spacing and visual hierarchy
-- Dark/light mode support with semantic tokens
+---
 
-### 🎭 **Smooth Animations**
-- Framer Motion powered page transitions
-- Staggered content reveals for engaging user experience
-- Interactive hover effects and micro-interactions
-- Floating background elements for visual depth
+## 🎯 **About Me**
 
-### 📱 **Responsive Excellence**
-- Mobile-first design approach
-- Seamless experience across all device sizes
-- Optimized touch interactions for mobile users
-- Progressive enhancement for larger screens
+> *Passionate Full-Stack Developer with hands-on experience in building responsive and scalable web applications using the MERN stack. Skilled in designing RESTful APIs, developing user-friendly interfaces, and optimizing performance.*
 
-### 🔧 **Technical Excellence**
-- Built with Next.js 15 App Router for optimal performance
-- TypeScript for type safety and better development experience
-- Tailwind CSS v4 for efficient styling
-- shadcn/ui components for consistent UI elements
-
-## 🛠️ Tech Stack
-
-| Category | Technologies |
-|----------|-------------|
-| **Frontend** | Next.js 15, React 18, TypeScript |
-| **Styling** | Tailwind CSS v4, CSS Variables |
-| **Animations** | Framer Motion |
-| **UI Components** | shadcn/ui, Radix UI |
-| **Icons** | Lucide React |
-| **Fonts** | Geist Sans, Geist Mono |
-| **Development** | ESLint, Prettier, Git |
-
-## 🎯 Portfolio Sections
-
-### 🏠 **Hero Section**
-- Animated introduction with floating background elements
-- Professional headshot with subtle animations
-- Call-to-action buttons with hover effects
-- Social media links integration
-
-### 👤 **About Section**
-- Personal story and professional journey
-- Animated skill progress bars
-- Experience highlights
-- Educational background
-
-### 💻 **Tech Stack Showcase**
-- Interactive technology grid
-- Skill level indicators
-- Category-based organization
-- Hover animations for each technology
-
-### 📊 **GitHub Stats**
-- Live GitHub statistics integration
-- Repository showcase
-- Contribution activity display
-- Achievement badges
-
-### 📞 **Contact Section**
-- Functional contact form with validation
-- Social media links
-- Professional contact information
-- Location and availability status
-
-## 🚀 Quick Start
-
-\`\`\`bash
-# Clone the repository
-git clone <repository-url>
-cd portfolio-website
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Open http://localhost:3000
+\`\`\`javascript
+const sahil = {
+    location: "India 🇮🇳",
+    currentFocus: "React.js & Full-Stack Development",
+    experience: "MERN Stack Development",
+    challenges: "150+ coding problems solved",
+    platforms: ["LeetCode", "HackerRank", "CodeChef"],
+    passion: "Learning new technologies & building amazing products"
+};
 \`\`\`
 
-## 📁 Project Architecture
+### 🔥 **Current Status**
+- 🔭 Working on: **Bus Booking System**
+- 🌱 Learning: **Advanced React.js & Practical Implementation**
+- 💼 Portfolio: **[sahilgupta-sg.vercel.app](https://sahilgupta-sg.vercel.app)**
+- 📧 Contact: **guptasahil2175@gmail.com**
+- 📄 Resume: **[View My Experience](https://drive.google.com/file/d/1vut-29Hj-g8r7V12vd_RX3RtfMJaahvl/view?usp=sharing)**
+
+---
+
+## 🏆 **Achievements & Recognition**
+
+<div align="center">
+
+[![GitHub Trophies](https://github-profile-trophy.vercel.app/?username=sahilgupta2175&theme=algolia&no-frame=true&row=1&column=6)](https://github.com/ryo-ma/github-profile-trophy)
+
+</div>
+
+---
+
+## 💻 **Tech Stack & Expertise**
+
+<div align="center">
+
+### **Frontend Development**
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+### **Backend Development**
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge&logo=express&logoColor=white)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+
+### **Database & Cloud**
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![AWS](https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+
+### **Tools & Technologies**
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+
+### **Data Science & ML**
+![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-27338e?style=for-the-badge&logo=OpenCV&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)
+![Scikit Learn](https://img.shields.io/badge/scikit_learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
+
+</div>
+
+---
+
+## 📊 **GitHub Analytics**
+
+<div align="center">
+
+<img height="180em" src="https://github-readme-stats.vercel.app/api?username=sahilgupta2175&show_icons=true&theme=algolia&include_all_commits=true&count_private=true"/>
+<img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=sahilgupta2175&layout=compact&langs_count=8&theme=algolia"/>
+
+</div>
+
+<div align="center">
+
+[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=sahilgupta2175&theme=algolia)](https://git.io/streak-stats)
+
+</div>
+
+---
+
+## 🌐 **Connect With Me**
+
+<div align="center">
+
+### **Professional Networks**
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/sahilgupta2175)
+[![Portfolio](https://img.shields.io/badge/Portfolio-FF5722?style=for-the-badge&logo=google-chrome&logoColor=white)](https://sahilgupta-sg.vercel.app)
+[![Resume](https://img.shields.io/badge/Resume-4285F4?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1vut-29Hj-g8r7V12vd_RX3RtfMJaahvl/view?usp=sharing)
+
+### **Social Media**
+[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/sahilgu82158785)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/sahilgupta.2175)
+[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://fb.com/sahilgupta.2175)
+[![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/sxm4xqMU)
+
+### **Coding Platforms**
+[![LeetCode](https://img.shields.io/badge/LeetCode-FFA116?style=for-the-badge&logo=leetcode&logoColor=black)](https://leetcode.com/sahilgupta21)
+[![HackerRank](https://img.shields.io/badge/HackerRank-2EC866?style=for-the-badge&logo=hackerrank&logoColor=white)](https://hackerrank.com/guptasahil2175)
+[![CodeChef](https://img.shields.io/badge/CodeChef-5B4638?style=for-the-badge&logo=codechef&logoColor=white)](https://codechef.com/users/guptasahil2175)
+[![GeeksforGeeks](https://img.shields.io/badge/GeeksforGeeks-298D46?style=for-the-badge&logo=geeksforgeeks&logoColor=white)](https://auth.geeksforgeeks.org/user/guptasah9obx)
+[![Dev.to](https://img.shields.io/badge/Dev.to-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white)](https://dev.to/sahilgupta2175)
+
+</div>
+
+---
+
+## 💡 **Fun Facts**
+
+<div align="center">
 
 \`\`\`
-portfolio-website/
-├── 🎨 app/
-│   ├── globals.css          # Design system & animations
-│   ├── layout.tsx           # Root layout with fonts
-│   └── page.tsx             # Main portfolio composition
-├── 🧩 components/
-│   ├── ui/                  # Reusable UI components
-│   ├── hero-section.tsx     # Animated hero with CTA
-│   ├── about-section.tsx    # Personal story & skills
-│   ├── tech-stack-section.tsx # Technology showcase
-│   ├── stats-section.tsx    # GitHub integration
-│   └── contact-section.tsx  # Contact form & links
-└── 📦 public/               # Static assets & images
+🎯 Completed 150+ coding challenges across multiple platforms
+🚀 Always eager to learn new technologies and frameworks  
+💻 Believe in writing clean, maintainable, and scalable code
+🌟 Love contributing to open-source projects
+📚 Continuous learner with a passion for problem-solving
 \`\`\`
 
-## 🎨 Design Philosophy
+</div>
 
-### **Color Psychology**
-- **Cyan (#06b6d4)**: Technology, innovation, trust
-- **Amber (#f59e0b)**: Energy, creativity, warmth
-- **Neutrals**: Professional, clean, accessible
+---
 
-### **Typography Hierarchy**
-- **Display**: Bold, attention-grabbing headlines
-- **Headings**: Clear section organization
-- **Body**: Readable, comfortable text
-- **Code**: Monospace for technical content
+## 📈 **Contribution Graph**
 
-### **Animation Principles**
-- **Purposeful**: Every animation serves a function
-- **Smooth**: 60fps performance on all devices
-- **Accessible**: Respects user motion preferences
-- **Delightful**: Adds personality without distraction
+<div align="center">
 
-## 📈 Performance Metrics
+[![Sahil's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=sahilgupta2175&theme=react-dark&hide_border=true)](https://github.com/ashutosh00710/github-readme-activity-graph)
 
-| Metric | Score | Description |
-|--------|-------|-------------|
-| **Performance** | 95+ | Optimized loading and rendering |
-| **Accessibility** | 100 | WCAG 2.1 AA compliant |
-| **Best Practices** | 95+ | Modern web standards |
-| **SEO** | 100 | Search engine optimized |
-
-## 🔧 Customization Guide
-
-### **Personal Information**
-\`\`\`tsx
-// components/hero-section.tsx
-const personalInfo = {
-  name: "Your Name",
-  title: "Your Title",
-  bio: "Your bio...",
-  // ... other details
-}
-\`\`\`
-
-### **Skills & Technologies**
-\`\`\`tsx
-// components/tech-stack-section.tsx
-const skills = [
-  { name: "React", level: 90, category: "Frontend" },
-  // ... add your skills
-]
-\`\`\`
-
-### **Color Customization**
-\`\`\`css
-/* app/globals.css */
-:root {
-  --primary: 198 93% 60%;    /* Your primary color */
-  --secondary: 43 96% 56%;   /* Your accent color */
-  /* ... other variables */
-}
-\`\`\`
-
-## 🚀 Deployment Options
-
-### **Vercel (Recommended)**
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
-
-### **Netlify**
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start)
-
-### **Manual Deployment**
-\`\`\`bash
-npm run build
-npm start
-\`\`\`
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **shadcn/ui** for the beautiful component library
-- **Framer Motion** for smooth animations
-- **Tailwind CSS** for efficient styling
-- **Next.js** team for the amazing framework
+</div>
 
 ---
 
 <div align="center">
 
-**Built with ❤️ by developers, for developers**
+### 🚀 **"Code is like humor. When you have to explain it, it's bad."** 
 
-[Live Demo](https://your-portfolio-url.com) • [Documentation](https://docs.your-portfolio.com) • [Support](mailto:support@example.com)
+*Let's build something amazing together!*
+
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:guptasahil2175@gmail.com)
+
+**⭐ Star my repositories if you find them helpful!**
 
 </div>
