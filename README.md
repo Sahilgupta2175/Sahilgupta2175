@@ -1,3 +1,4 @@
+<div backgroundColor="white"> 
 <h1 align="center">Hi 👋, I'm Sahil Gupta</h1>
 <h3 align="center">Full-stack developer with hands-on experience in building responsive and scalable web applications using the MERN stack. Skilled in designing RESTful APIs, developing user-friendly interfaces, and optimizing performance. Strong background in SQL, Java, and modern web technologies. Completed 150+ coding challenges on LeetCode and HackerRank.</h3>
 
@@ -43,4 +44,4 @@
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=sahilgupta2175&show_icons=true&locale=en" alt="sahilgupta2175" /></p>
 
 <p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=sahilgupta2175&" alt="sahilgupta2175" /></p>
-
+</div>
