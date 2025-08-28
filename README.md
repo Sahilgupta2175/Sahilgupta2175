@@ -37,16 +37,6 @@ const sahil = {
 
 ---
 
-## 🏆 **Achievements & Recognition**
-
-<div align="center">
-
-[![GitHub Trophies](https://github-profile-trophy.vercel.app/?username=sahilgupta2175&theme=algolia&no-frame=true&row=1&column=6)](https://github.com/ryo-ma/github-profile-trophy)
-
-</div>
-
----
-
 ## 💻 **Tech Stack & Expertise**
 
 <div align="center">
@@ -93,12 +83,6 @@ const sahil = {
 
 <img height="180em" src="https://github-readme-stats.vercel.app/api?username=sahilgupta2175&show_icons=true&theme=algolia&include_all_commits=true&count_private=true"/>
 <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=sahilgupta2175&layout=compact&langs_count=8&theme=algolia"/>
-
-</div>
-
-<div align="center">
-
-[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=sahilgupta2175&theme=algolia)](https://git.io/streak-stats)
 
 </div>
 
