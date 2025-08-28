@@ -1,3 +1,6 @@
+<h1 align="center">Hi 👋, I'm Sahil Gupta</h1>
+<h3 align="center">Full-stack developer with hands-on experience in building responsive and scalable web applications using the MERN stack. Skilled in designing RESTful APIs, developing user-friendly interfaces, and optimizing performance. Strong background in SQL, Java, and modern web technologies. Completed 150+ coding challenges on LeetCode and HackerRank.</h3>
+
 # 💫 About Me:
 🔭 I’m currently working on a bus booking system.<br><br>🌱 I’m currently learning React in practical knowledge-wise.<br><br>👨‍💻 All of my projects are available at https://sahilgupta-sg.vercel.app<br><br>💬 Ask me about HTML5, CSS3, JavaScript, React.js, Node.js, Express.js, Java, SQL, MongoDB, MySQL, PostgreSQL, Git, GitHub<br><br>📫 How to reach me guptasahil2175@gmail.com<br><br>📄 Know about my experiences. https://drive.google.com/file/d/1vut-29Hj-g8r7V12vd_RX3RtfMJaahvl/view?usp=sharing<br><br>⚡ Fun fact I think I am a serious person. I want to learn new things from other experiences.
 
