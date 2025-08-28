@@ -1,8 +1,6 @@
 <h1 align="center">Hi 👋, I'm Sahil Gupta</h1>
 <h3 align="center">Full-stack developer with hands-on experience in building responsive and scalable web applications using the MERN stack. Skilled in designing RESTful APIs, developing user-friendly interfaces, and optimizing performance. Strong background in SQL, Java, and modern web technologies. Completed 150+ coding challenges on LeetCode and HackerRank.</h3>
 
-<p align="left"> <img src="https://komarev.com/ghpvc/?username=sahilgupta2175&label=Profile%20views&color=0e75b6&style=flat" alt="sahilgupta2175" /> </p>
-
 <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=sahilgupta2175" alt="sahilgupta2175" /></a> </p>
 
 <p align="left"> <a href="https://twitter.com/sahilgu82158785" target="blank"><img src="https://img.shields.io/twitter/follow/sahilgu82158785?logo=twitter&style=for-the-badge" alt="sahilgu82158785" /></a> </p>
@@ -42,6 +40,3 @@
 
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=sahilgupta2175&show_icons=true&locale=en" alt="sahilgupta2175" /></p>
 
-<p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=sahilgupta2175&" alt="sahilgupta2175" /></p>
-
-can you re design like modern design
