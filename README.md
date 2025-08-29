@@ -1,6 +1,7 @@
 <h1 align="center">
-  Hi 👋, I'm Sahil Gupta  
+  Hi   
   <img src="https://raw.githubusercontent.com/ABSphreak/ABSphreak/master/gifs/Hi.gif" width="30px"/>
+  , I'm Sahil Gupta
 </h1>
 
 <p align="center">
