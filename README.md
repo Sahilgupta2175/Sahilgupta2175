@@ -1,33 +1,70 @@
-<h1 align="center">
-  Hi   
-  <img src="https://raw.githubusercontent.com/ABSphreak/ABSphreak/master/gifs/Hi.gif" width="30px"/>
-  , I'm Sahil Gupta
-</h1>
+<div align="center">
 
-<p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&duration=3000&pause=800&color=3DDC84&center=true&vCenter=true&width=600&lines=Full-stack+Developer;MERN+Stack+Enthusiast;150%2B+Coding+Challenges+Solved;Always+Learning+New+Things" alt="Typing SVG" />
-</p>
+<p><img src="https://capsule-render.vercel.app/api?type=waving&color=0:8871e5,100:b678c4&height=150&section=header&text=Sahil%20Gupta&fontSize=40&fontColor=ffffff&animation=fadeIn" alt="Sahil Gupta" width="100%" /></p>
 
-<p align="center">
-  Full-stack developer with hands-on experience in building responsive and scalable web applications using the MERN stack. Skilled in designing RESTful APIs, developing user-friendly interfaces, and optimizing performance. Strong background in SQL, Java, and modern web technologies. Completed 150+ coding challenges on LeetCode and HackerRank.
-</p>
+### Hi, I'm Sahil Gupta 👋
 
-# 💫 About Me:
-🔭 I’m currently working on a Vehicle rental services.<br><br>🌱 I’m currently learning React in practical knowledge-wise.<br><br>👨‍💻 All of my projects are available at https://sahilgupta.tech<br><br>💬 Ask me about HTML5, CSS3, JavaScript, React.js, Node.js, Express.js, Java, SQL, MongoDB, MySQL, PostgreSQL, Git, GitHub<br><br>📫 How to reach me guptasahil2175@gmail.com<br><br>📄 Know about my experiences. https://drive.google.com/file/d/1vut-29Hj-g8r7V12vd_RX3RtfMJaahvl/view?usp=sharing<br><br>⚡ Fun fact I think I am a serious person. I want to learn new things from other experiences.
+<p><img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=3000&pause=800&color=0969DA&center=true&vCenter=true&width=592&height=40&lines=Full-Stack%20MERN%20Developer%20%20%20%20%20%20%20%20%20%20%20%20%20%20" alt="Full-Stack MERN Developer              " /></p>
 
-## 🌐 Socials:
-[![Discord](https://img.shields.io/badge/Discord-%237289DA.svg?logo=discord&logoColor=white)](https://discord.gg/sxm4xqMU) [![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?logo=Facebook&logoColor=white)](https://facebook.com/sahilgupta.2175) [![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white)](https://instagram.com/sahilgupta.2175) [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/sahilgupta2175) [![X](https://img.shields.io/badge/X-black.svg?logo=X&logoColor=white)](https://x.com/sahilgu82158785) [![email](https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white)](mailto:guptasahil2175@gmail.com) 
+<p><img src="https://komarev.com/ghpvc/?username=Sahilgupta2175&color=0969da&style=flat-square" alt="profile views" /></p>
 
-# 💻 Tech Stack:
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white) ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white) ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white) ![Netlify](https://img.shields.io/badge/netlify-%23000000.svg?style=for-the-badge&logo=netlify&logoColor=#00C7B7) ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white) ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white) ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white) ![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white) ![Context-API](https://img.shields.io/badge/Context--Api-000000?style=for-the-badge&logo=react) ![EJS](https://img.shields.io/badge/ejs-%23B4CA65.svg?style=for-the-badge&logo=ejs&logoColor=black) ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB) ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens) ![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white) ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white) ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) ![Nodemon](https://img.shields.io/badge/NODEMON-%23323330.svg?style=for-the-badge&logo=nodemon&logoColor=%BBDEAD) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white) ![React Hook Form](https://img.shields.io/badge/React%20Hook%20Form-%23EC5990.svg?style=for-the-badge&logo=reacthookform&logoColor=white) ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Jenkins](https://img.shields.io/badge/jenkins-%232C5263.svg?style=for-the-badge&logo=jenkins&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white) ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white) ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white) ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![Portfolio](https://img.shields.io/badge/Portfolio-%23000000.svg?style=for-the-badge&logo=firefox&logoColor=#FF7139) ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white) ![Power Bi](https://img.shields.io/badge/power_bi-F2C811?style=for-the-badge&logo=powerbi&logoColor=black) ![Jira](https://img.shields.io/badge/jira-%230A0FFF.svg?style=for-the-badge&logo=jira&logoColor=white)
+</div>
 
-# 📊 GitHub Stats:
-![](https://github-readme-stats.vercel.app/api?username=Sahilgupta2175&theme=blue-green&hide_border=false&include_all_commits=true&count_private=true)<br/>
-![](https://nirzak-streak-stats.vercel.app/?user=Sahilgupta2175&theme=blue-green&hide_border=false)<br/>
-![](https://github-readme-stats.vercel.app/api/top-langs/?username=Sahilgupta2175&theme=blue-green&hide_border=false&include_all_commits=true&count_private=true&layout=compact)
+## ✨ About me
 
-### 🔝 Top Contributed Repo
-![](https://github-contributor-stats.vercel.app/api?username=Sahilgupta2175&limit=5&theme=blue-green&combine_all_yearly_contributions=true)
+🚀 Full-stack developer with hands-on experience in building responsive and scalable web applications using the MERN stack. Skilled in designing RESTful APIs, developing user-friendly interfaces, and optimizing performance. Strong background in SQL, Java, and modern web technologies. Completed 150+ coding challenges on LeetCode and HackerRank.  
+📍 Orai  
+💬 ask me about anything on my stack — I answer fast
 
----
-[![](https://visitcount.itsvg.in/api?id=Sahilgupta2175&icon=9&color=0)](https://visitcount.itsvg.in)
+## 🛠️ Stack
+
+<div align="center">
+
+<p><img src="https://skillicons.dev/icons?i=html,css,bootstrap,tailwind,js,react,redux,nodejs,express,mongodb,git,java,mysql,postgres,postman,vscode&theme=light" alt="skills" /></p>
+
+</div>
+
+## 📦 Things I've built
+
+<table><tr>
+<td width="50%"><b><a href="https://github.com/Sahilgupta2175/Sahil-Gupta-Portfolio">Sahil-Gupta-Portfolio</a></b> · ★ 0<br/>A modern, responsive personal portfolio website built with React, Vite, and Tailwind CSS. Features a contact form with EmailJS integration and auto-reply functionality.</td>
+<td width="50%"><b><a href="https://github.com/Sahilgupta2175/inshare-project">inshare-project</a></b> · ★ 0<br/>InShare is a modern, web-based file sharing application that allows users to upload files and share them via email or direct links. Built with Node.js, Express, and MongoDB, it provides a seamless file sharing experience with a clean, intuitive interface.</td>
+</tr></table>
+
+<table><tr>
+<td width="50%"><b><a href="https://github.com/Sahilgupta2175/Wanderlust">Wanderlust</a></b> · ★ 0<br/>A full-stack Airbnb-inspired property rental platform with beautiful UI, secure authentication, and seamless booking experiences.</td>
+<td width="50%"><b><a href="https://github.com/Sahilgupta2175/URL-Shortner">URL-Shortner</a></b> · ★ 0<br/>A full-stack URL shortening application that transforms long URLs into short, shareable links. Built with Node.js, Express, MongoDB, React, and Vite.</td>
+</tr></table>
+
+<table><tr>
+<td width="50%"><b><a href="https://github.com/Sahilgupta2175/Sahilgupta2175">Sahilgupta2175</a></b> · ★ 0<br/>Full-Stack MERN Developer | React, Node.js, MongoDB | Java & SQL | 150+ DSA problems solved</td>
+</tr></table>
+
+## 📊 Stats
+
+**55** repos · **1** followers · **★ 0** earned
+
+<div align="center">
+
+<p><img src="https://readme-craft-sg.vercel.app/api/card/Sahilgupta2175.svg?mode=light" alt="stats" /></p>
+<p><img src="https://readme-craft-sg.vercel.app/api/streak/Sahilgupta2175.svg?mode=light" alt="streak" /></p>
+<p><img src="https://readme-craft-sg.vercel.app/api/langs/Sahilgupta2175.svg?mode=light" alt="top languages" /></p>
+<p><img src="https://readme-craft-sg.vercel.app/api/trophies/Sahilgupta2175.svg?mode=light" alt="trophies" /></p>
+
+<p><img src="https://readme-craft-sg.vercel.app/api/graph/Sahilgupta2175.svg?mode=light" alt="Sahilgupta2175's contribution graph" /></p>
+
+</div>
+
+## 🏅 Achievements
+
+<div align="center">
+
+<p><img src="https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png" alt="Pull Shark" title="Pull Shark" width="48" /> <img src="https://github.githubassets.com/assets/yolo-default-be0bbff04951.png" alt="YOLO" title="YOLO" width="48" /> <img src="https://github.githubassets.com/assets/quickdraw-default-39c6aec8ff89.png" alt="Quickdraw" title="Quickdraw" width="48" /></p>
+
+</div>
+
+<div align="center">
+
+<a href="https://sahilgupta.tech"><img src="https://img.shields.io/badge/blog-visit-8871e5?style=flat-square&labelColor=f6f8fa&color=ffffff" alt="blog" /></a> <a href="https://github.com/Sahilgupta2175"><img src="https://img.shields.io/badge/github-follow-2ea44f?style=flat-square&labelColor=f6f8fa&color=ffffff" alt="github" /></a>
+
+</div>
