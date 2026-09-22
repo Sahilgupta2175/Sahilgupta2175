@@ -1,27 +1,69 @@
-<!--
-  Profile README for github.com/Sahilgupta2175
-  Every image is a self-contained SVG in ./assets (fonts + photo embedded; no third-party services).
-  All assets share one 1000-unit grid, so the % widths below make rows line up at any screen size.
-  Keep each row on ONE line with no spaces between the <a> tags — whitespace would break the alignment.
--->
-<p align="left"><a id="top"></a><a href="https://sahilgupta.tech"><img src="./assets/nav-sahil-gupta.svg" width="19.00%" alt="Sahil Gupta — portfolio"></a><a href="#about"><img src="./assets/nav-about.svg" width="17.70%" alt="About"></a><a href="#skills"><img src="./assets/nav-skills.svg" width="9.60%" alt="Skills"></a><a href="#projects"><img src="./assets/nav-projects.svg" width="11.40%" alt="Projects"></a><a href="https://sahilxdev.hashnode.dev"><img src="./assets/nav-blog.svg" width="9.80%" alt="Blog"></a><a href="#contact"><img src="./assets/nav-contact.svg" width="11.20%" alt="Contact"></a><a href="mailto:guptasahil2175@gmail.com?subject=Opportunity%20for%20Sahil"><img src="./assets/nav-hire-me.svg" width="21.20%" alt="Hire me"></a></p>
+<div align="center">
 
-<p align="center"><a href="https://sahilgupta.tech"><img src="./assets/hero.svg" width="100%" alt="Hi, I’m Sahil — I build things for the web. Full-stack MERN developer crafting fast, scalable and accessible web apps with React, Node.js, Express and MongoDB."></a></p>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:5B4FE9,100:8E7DFF&height=210&section=header&text=Hi%20%F0%9F%91%8B%2C%20I%27m%20Sahil%20Gupta&fontSize=38&fontColor=ffffff&fontAlignY=38&desc=Full-Stack%20MERN%20Developer%20-%20building%20fast%2C%20accessible%20web%20apps&descAlignY=55&descSize=16&animation=fadeIn" width="100%"/>
 
-<p align="left"><a href="https://sahilgupta.tech"><img src="./assets/btn-view-my-work.svg" width="25.20%" alt="View my work"></a><a href="./Sahil-Gupta-Resume.pdf"><img src="./assets/btn-download-cv.svg" width="19.80%" alt="Download CV"></a></p>
+<a href="https://sahilgupta.tech"><img src="https://img.shields.io/badge/Portfolio-sahilgupta.tech-7C6CFF?style=flat-square&labelColor=0B0C22" alt="Portfolio"/></a>
+<a href="https://www.linkedin.com/in/sahil-gupta-35199620a/"><img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&labelColor=0B0C22&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
+<a href="https://sahilxdev.hashnode.dev"><img src="https://img.shields.io/badge/Blog-Hashnode-4F7DFF?style=flat-square&labelColor=0B0C22&logo=hashnode&logoColor=white" alt="Hashnode blog"/></a>
+<a href="https://peerlist.io/sahilgupta2175"><img src="https://img.shields.io/badge/Peerlist-Follow-3DC47E?style=flat-square&labelColor=0B0C22&logo=peerlist&logoColor=white" alt="Peerlist"/></a>
+<a href="mailto:guptasahil2175@gmail.com"><img src="https://img.shields.io/badge/Email-guptasahil2175%40gmail.com-A597FF?style=flat-square&labelColor=0B0C22&logo=gmail&logoColor=white" alt="Email"/></a>
 
-<p align="center"><a id="about"></a><a href="https://sahilgupta.tech"><img src="./assets/about.svg" width="100%" alt="About me: I turn ideas into responsive, scalable products with the MERN stack. 150+ problems solved, 40+ public repositories, B.Tech CS (Honors), HPC program at Cognizant."></a></p>
+<br/>
 
-<p align="center"><a id="skills"></a><a href="#skills"><img src="./assets/skills.svg" width="100%" alt="Skills — HTML5 &amp; CSS3: Advanced; JavaScript: Advanced; React.js: Proficient; Tailwind CSS: Proficient; Node.js: Proficient; Express.js: Proficient; REST APIs: Proficient; Java: Intermediate; MongoDB: Proficient; SQL &amp; PL/SQL: Proficient; Git &amp; GitHub: Proficient; Postman: Proficient"></a></p>
+<img src="https://readme-typing-svg.demolab.com/?font=JetBrains+Mono&size=20&pause=1000&color=A597FF&center=true&vCenter=true&width=640&lines=Full-Stack+MERN+Developer;React+%C2%B7+Node.js+%C2%B7+Express+%C2%B7+MongoDB;150%2B+DSA+problems+solved;Open+to+internships+%26+full-time+roles" alt="Typing SVG"/>
 
-<p align="center"><a id="projects"></a><a href="https://github.com/Sahilgupta2175?tab=repositories"><img src="./assets/projects-header.svg" width="100%" alt="Featured projects — some of my recent work"></a></p>
+</div>
 
-<p align="left"><a href="https://github.com/Sahilgupta2175/github-readme-profile-generator"><img src="./assets/project-readme-craft.svg" width="31.90%" alt="README Craft — GitHub profile README generator with OAuth sign-in and live SVG stats cards."></a><a href="https://github.com/Sahilgupta2175/Wanderlust"><img src="./assets/project-wanderlust.svg" width="34.00%" alt="Wanderlust — Airbnb-style stay rental platform with secure auth and interactive maps."></a><a href="https://github.com/Sahilgupta2175/ChaiTailwind-CSS"><img src="./assets/project-chaitailwind.svg" width="34.00%" alt="ChaiTailwind CSS — Tailwind-inspired utility CSS compiler — HTML in, CSS out, zero dependencies."></a></p>
+## About
 
-<p align="left"><a href="https://github.com/Sahilgupta2175?tab=repositories"><img src="./assets/btn-all-repos.svg" width="63.28%" alt="Explore all 40+ repositories"></a></p>
+I build fast, scalable web apps with the MERN stack — React on the front end, Node.js, Express and MongoDB behind it. Right now:
 
-<p align="center"><a id="contact"></a><a href="mailto:guptasahil2175@gmail.com"><img src="./assets/contact.svg" width="100%" alt="Let’s work together. Open to internships, full-time roles and freelance collaborations. Currently building DriveEase, redesigning README Craft and practicing DSA in C++."></a></p>
+- 🚗 Building **DriveEase**, a peer-to-peer vehicle rental marketplace for Indian cities
+- 🎨 Redesigning **README Craft**, a GitHub profile README generator, from the ground up
+- 🧠 Practicing DSA in C++ — 150+ problems solved across LeetCode and HackerRank
+- 🎓 B.Tech in Computer Science (Honors); completed Cognizant's Healthcare Product Consulting program (SQL, PL/SQL, TriZetto Facets)
+- 📍 Orai, Uttar Pradesh, India — open to internships, full-time roles and freelance work
 
-<p align="left"><a href="https://www.linkedin.com/in/sahil-gupta-35199620a/"><img src="./assets/social-linkedin.svg" width="31.47%" alt="LinkedIn"></a><a href="https://sahilxdev.hashnode.dev"><img src="./assets/social-hashnode.svg" width="13.69%" alt="Hashnode blog"></a><a href="https://peerlist.io/sahilgupta2175"><img src="./assets/social-peerlist.svg" width="11.91%" alt="Peerlist"></a><a href="mailto:guptasahil2175@gmail.com"><img src="./assets/social-mail.svg" width="10.44%" alt="Email"></a><a href="https://sahilgupta.tech"><img src="./assets/social-globe.svg" width="12.59%" alt="Portfolio"></a></p>
+## Skills
 
-<p align="center"><a href="#top"><img src="./assets/footer.svg" width="100%" alt="© 2026 Sahil Gupta. Made with love by Sahil. Back to top."></a></p>
+<div align="center">
+<img src="https://skillicons.dev/icons?i=html,css,js,react,tailwind,nodejs,express,java,mongodb,mysql,postgresql,git,github,postman&theme=dark" alt="Skills"/>
+</div>
+
+## Featured Projects
+
+| Project | What it does | Built with |
+|---|---|---|
+| **[README Craft](https://github.com/Sahilgupta2175/github-readme-profile-generator)** — [live ↗](https://readme-craft-sg.vercel.app) | GitHub profile README generator with OAuth sign-in and live SVG stats cards. | Node.js · GitHub OAuth · Vercel |
+| **[Wanderlust](https://github.com/Sahilgupta2175/Wanderlust)** | Airbnb-style stay rental platform with secure auth and interactive maps. | Node.js · Express · MongoDB |
+| **[ChaiTailwind CSS](https://github.com/Sahilgupta2175/ChaiTailwind-CSS)** | Tailwind-inspired utility CSS compiler — reads HTML, writes CSS, zero dependencies. | Node.js |
+| **[InShare](https://github.com/Sahilgupta2175/inshare-project)** | Web-based file sharing app — upload once, share by email or a direct link. | Node.js · Express · MongoDB |
+
+<div align="center">
+
+<a href="https://github.com/Sahilgupta2175?tab=repositories">See all 59 repositories →</a>
+
+</div>
+
+## GitHub Stats
+
+<div align="center">
+
+<img height="165" src="https://github-readme-stats-git-master-rickstaa.vercel.app/api?username=Sahilgupta2175&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D0F29&title_color=A597FF&icon_color=7C6CFF&text_color=E6E6F0" alt="GitHub stats"/>
+<img height="165" src="https://github-readme-stats-git-master-rickstaa.vercel.app/api/top-langs/?username=Sahilgupta2175&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D0F29&title_color=A597FF&text_color=E6E6F0" alt="Top languages"/>
+
+<img src="https://streak-stats.demolab.com/?user=Sahilgupta2175&theme=tokyonight&hide_border=true&background=0D0F29&ring=7C6CFF&fire=A597FF&currStreakLabel=A597FF" alt="GitHub streak"/>
+
+</div>
+
+## Let's Connect
+
+<div align="center">
+
+<a href="mailto:guptasahil2175@gmail.com"><img src="https://img.shields.io/badge/Say%20hi-guptasahil2175%40gmail.com-7C6CFF?style=for-the-badge&labelColor=0B0C22" alt="Email me"/></a>
+
+</div>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:5B4FE9,100:8E7DFF&height=120&section=footer" width="100%"/>
+
+<div align="center"><sub>© 2026 Sahil Gupta — thanks for stopping by 👋</sub></div>
