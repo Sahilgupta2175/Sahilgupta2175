@@ -16,13 +16,13 @@
 
 ## About
 
-I build fast, scalable web apps with the MERN stack — React on the front end, Node.js, Express and MongoDB behind it. Right now:
+I build fast, scalable web apps with the MERN stack - React on the front end, Node.js, Express and MongoDB behind it. Right now:
 
 - 🚗 Building **DriveEase**, a peer-to-peer vehicle rental marketplace for Indian cities
 - 🎨 Redesigning **README Craft**, a GitHub profile README generator, from the ground up
-- 🧠 Practicing DSA in C++ — 150+ problems solved across LeetCode and HackerRank
+- 🧠 Practicing DSA in C++ - 150+ problems solved across LeetCode and HackerRank
 - 🎓 B.Tech in Computer Science (Honors); completed Cognizant's Healthcare Product Consulting program (SQL, PL/SQL, TriZetto Facets)
-- 📍 Orai, Uttar Pradesh, India — open to internships, full-time roles and freelance work
+- 📍 Orai, Uttar Pradesh, India - open to internships, full-time roles and freelance work
 
 ## Skills
 
@@ -34,10 +34,10 @@ I build fast, scalable web apps with the MERN stack — React on the front end, 
 
 | Project | What it does | Built with |
 |---|---|---|
-| **[README Craft](https://github.com/Sahilgupta2175/github-readme-profile-generator)** — [live ↗](https://readme-craft-sg.vercel.app) | GitHub profile README generator with OAuth sign-in and live SVG stats cards. | Node.js · GitHub OAuth · Vercel |
+| **[README Craft](https://github.com/Sahilgupta2175/github-readme-profile-generator)** | GitHub profile README generator with OAuth sign-in and live SVG stats cards. | Node.js · GitHub OAuth · Vercel |
 | **[Wanderlust](https://github.com/Sahilgupta2175/Wanderlust)** | Airbnb-style stay rental platform with secure auth and interactive maps. | Node.js · Express · MongoDB |
-| **[ChaiTailwind CSS](https://github.com/Sahilgupta2175/ChaiTailwind-CSS)** | Tailwind-inspired utility CSS compiler — reads HTML, writes CSS, zero dependencies. | Node.js |
-| **[InShare](https://github.com/Sahilgupta2175/inshare-project)** | Web-based file sharing app — upload once, share by email or a direct link. | Node.js · Express · MongoDB |
+| **[ChaiTailwind CSS](https://github.com/Sahilgupta2175/ChaiTailwind-CSS)** | Tailwind-inspired utility CSS compiler - reads HTML, writes CSS, zero dependencies. | Node.js |
+| **[InShare](https://github.com/Sahilgupta2175/inshare-project)** | Web-based file sharing app - upload once, share by email or a direct link. | Node.js · Express · MongoDB |
 
 <div align="center">
 
@@ -66,4 +66,4 @@ I build fast, scalable web apps with the MERN stack — React on the front end, 
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:5B4FE9,100:8E7DFF&height=120&section=footer" width="100%"/>
 
-<div align="center"><sub>© 2026 Sahil Gupta — thanks for stopping by 👋</sub></div>
+<div align="center"><sub>© 2026 Sahil Gupta - thanks for stopping by 👋</sub></div>
