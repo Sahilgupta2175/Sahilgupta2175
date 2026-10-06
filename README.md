@@ -3,26 +3,26 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./light.svg">
-  <img src="./dark.svg" width="100%" alt="Sahil Gupta — Full-Stack MERN Developer. Cognizant, Healthcare Product Consulting. Stack: JavaScript, React, Node.js, Express, MongoDB, Next.js, Tailwind CSS, Java, SQL, PL/SQL. Building DriveEase.">
+  <img src="./dark.svg" width="100%" alt="Sahil Gupta - Full-Stack MERN Developer. Cognizant, Healthcare Product Consulting. Stack: JavaScript, React, Node.js, Express, MongoDB, Next.js, Tailwind CSS, Java, SQL, PL/SQL. Building DriveEase.">
 </picture>
 
 </div>
 
 ### Hey, I'm Sahil 👋
 
-Full-stack developer building responsive, scalable web apps on the **MERN stack** — REST APIs, clean UIs, and the database work underneath. Currently building **DriveEase**, a peer-to-peer vehicle rental marketplace for Indian cities.
+Full-stack developer building responsive, scalable web apps on the **MERN stack** - REST APIs, clean UIs, and the database work underneath. Currently building **DriveEase**, a peer-to-peer vehicle rental marketplace for Indian cities.
 
 ---
 
 ### ⚡ Focus
 
-- **Full-stack web** — React front ends, Node.js / Express APIs, MongoDB data layers
-- **Databases** — SQL and PL/SQL, alongside MongoDB, MySQL and PostgreSQL
-- **Problem solving** — 150+ DSA problems solved across LeetCode and HackerRank
+- **Full-stack web** - React front ends, Node.js / Express APIs, MongoDB data layers
+- **Databases** - SQL and PL/SQL, alongside MongoDB, MySQL and PostgreSQL
+- **Problem solving** - 150+ DSA problems solved across LeetCode and HackerRank
 
 ### 💼 Experience
 
-**Cognizant — Healthcare Product Consulting (HPC) program**
+**Cognizant - Healthcare Product Consulting (HPC) program**
 SQL and PL/SQL on U.S. healthcare payer systems, working with TriZetto Facets.
 
 ### 🚀 Featured Projects
@@ -31,7 +31,7 @@ SQL and PL/SQL on U.S. healthcare payer systems, working with TriZetto Facets.
 | --- | --- | --- |
 | **DriveEase** | Peer-to-peer vehicle rental marketplace for Indian cities | Next.js · Razorpay · PostHog · Vercel |
 | [**README Craft**](https://github.com/Sahilgupta2175/github-readme-profile-generator) · [live](https://readme-craft-sg.vercel.app) | GitHub profile README generator with GitHub OAuth login | Full-stack JS |
-| [**ChaiTailwind-CSS**](https://github.com/Sahilgupta2175/ChaiTailwind-CSS) | Tailwind-inspired utility-CSS compiler — reads HTML, extracts classes, emits CSS | Node.js, zero dependencies |
+| [**ChaiTailwind-CSS**](https://github.com/Sahilgupta2175/ChaiTailwind-CSS) | Tailwind-inspired utility-CSS compiler - reads HTML, extracts classes, emits CSS | Node.js, zero dependencies |
 | [**Wanderlust**](https://github.com/Sahilgupta2175/Wanderlust) | Airbnb-inspired property rental platform with auth and bookings | Node.js · Express · MongoDB |
 | [**InShare**](https://github.com/Sahilgupta2175/inshare-project) | File sharing via email or direct links | Node.js · Express · MongoDB |
 | [**URL Shortener**](https://github.com/Sahilgupta2175/URL-Shortner) | Turns long URLs into short, shareable links | React · Vite · Node.js · MongoDB |
