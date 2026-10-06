@@ -56,7 +56,7 @@ I write about what I build on **[Hashnode](https://sahilxdev.hashnode.dev)**.
 
 <p align="center">
   <img src="https://github-readme-stats.vercel.app/api?username=Sahilgupta2175&show_icons=true&theme=transparent&hide_border=true" height="170" alt="GitHub stats">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sahilgupta2175&layout=compact&theme=transparent&hide_border=true&langs_count=8" height="170" alt="Top languages">
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sahilgupta2175&layout=compact&theme=transparent&hide_border=true&langs_count=8&hide=jupyter%20notebook" height="170" alt="Top languages">
 </p>
 
 <p align="center">
