@@ -1,69 +1,79 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:5B4FE9,100:8E7DFF&height=210&section=header&text=Hi%20%F0%9F%91%8B%2C%20I%27m%20Sahil%20Gupta&fontSize=38&fontColor=ffffff&fontAlignY=38&desc=Full-Stack%20MERN%20Developer%20-%20building%20fast%2C%20accessible%20web%20apps&descAlignY=55&descSize=16&animation=fadeIn" width="100%"/>
-
-<a href="https://sahilgupta.tech"><img src="https://img.shields.io/badge/Portfolio-sahilgupta.tech-7C6CFF?style=flat-square&labelColor=0B0C22" alt="Portfolio"/></a>
-<a href="https://www.linkedin.com/in/sahil-gupta-35199620a/"><img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&labelColor=0B0C22&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
-<a href="https://sahilxdev.hashnode.dev"><img src="https://img.shields.io/badge/Blog-Hashnode-4F7DFF?style=flat-square&labelColor=0B0C22&logo=hashnode&logoColor=white" alt="Hashnode blog"/></a>
-<a href="https://peerlist.io/sahilgupta2175"><img src="https://img.shields.io/badge/Peerlist-Follow-3DC47E?style=flat-square&labelColor=0B0C22&logo=peerlist&logoColor=white" alt="Peerlist"/></a>
-<a href="mailto:guptasahil2175@gmail.com"><img src="https://img.shields.io/badge/Email-guptasahil2175%40gmail.com-A597FF?style=flat-square&labelColor=0B0C22&logo=gmail&logoColor=white" alt="Email"/></a>
-
-<br/>
-
-<img src="https://readme-typing-svg.demolab.com/?font=JetBrains+Mono&size=20&pause=1000&color=A597FF&center=true&vCenter=true&width=640&lines=Full-Stack+MERN+Developer;React+%C2%B7+Node.js+%C2%B7+Express+%C2%B7+MongoDB;150%2B+DSA+problems+solved;Open+to+internships+%26+full-time+roles" alt="Typing SVG"/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./light.svg">
+  <img src="./dark.svg" width="100%" alt="Sahil Gupta — Full-Stack MERN Developer. Cognizant, Healthcare Product Consulting. Stack: JavaScript, React, Node.js, Express, MongoDB, Next.js, Tailwind CSS, Java, SQL, PL/SQL. Building DriveEase.">
+</picture>
 
 </div>
 
-## About
+### Hey, I'm Sahil 👋
 
-I build fast, scalable web apps with the MERN stack - React on the front end, Node.js, Express and MongoDB behind it. Right now:
+Full-stack developer building responsive, scalable web apps on the **MERN stack** — REST APIs, clean UIs, and the database work underneath. Currently building **DriveEase**, a peer-to-peer vehicle rental marketplace for Indian cities.
 
-- 🚗 Building **DriveEase**, a peer-to-peer vehicle rental marketplace for Indian cities
-- 🎨 Redesigning **README Craft**, a GitHub profile README generator, from the ground up
-- 🧠 Practicing DSA in C++ - 150+ problems solved across LeetCode and HackerRank
-- 🎓 B.Tech in Computer Science (Honors); completed Cognizant's Healthcare Product Consulting program (SQL, PL/SQL, TriZetto Facets)
-- 📍 Orai, Uttar Pradesh, India - open to internships, full-time roles and freelance work
+---
 
-## Skills
+### ⚡ Focus
 
-<div align="center">
-<img src="https://skillicons.dev/icons?i=html,css,js,react,tailwind,nodejs,express,java,mongodb,mysql,postgresql,git,github,postman&theme=dark" alt="Skills"/>
-</div>
+- **Full-stack web** — React front ends, Node.js / Express APIs, MongoDB data layers
+- **Databases** — SQL and PL/SQL, alongside MongoDB, MySQL and PostgreSQL
+- **Problem solving** — 150+ DSA problems solved across LeetCode and HackerRank
 
-## Featured Projects
+### 💼 Experience
 
-| Project | What it does | Built with |
-|---|---|---|
-| **[README Craft](https://github.com/Sahilgupta2175/github-readme-profile-generator)** | GitHub profile README generator with OAuth sign-in and live SVG stats cards. | Node.js · GitHub OAuth · Vercel |
-| **[Wanderlust](https://github.com/Sahilgupta2175/Wanderlust)** | Airbnb-style stay rental platform with secure auth and interactive maps. | Node.js · Express · MongoDB |
-| **[ChaiTailwind CSS](https://github.com/Sahilgupta2175/ChaiTailwind-CSS)** | Tailwind-inspired utility CSS compiler - reads HTML, writes CSS, zero dependencies. | Node.js |
-| **[InShare](https://github.com/Sahilgupta2175/inshare-project)** | Web-based file sharing app - upload once, share by email or a direct link. | Node.js · Express · MongoDB |
+**Cognizant — Healthcare Product Consulting (HPC) program**
+SQL and PL/SQL on U.S. healthcare payer systems, working with TriZetto Facets.
 
-<div align="center">
+### 🚀 Featured Projects
 
-<a href="https://github.com/Sahilgupta2175?tab=repositories">See all 59 repositories →</a>
+| Project | What it is | Built with |
+| --- | --- | --- |
+| **DriveEase** | Peer-to-peer vehicle rental marketplace for Indian cities | Next.js · Razorpay · PostHog · Vercel |
+| [**README Craft**](https://github.com/Sahilgupta2175/github-readme-profile-generator) · [live](https://readme-craft-sg.vercel.app) | GitHub profile README generator with GitHub OAuth login | Full-stack JS |
+| [**ChaiTailwind-CSS**](https://github.com/Sahilgupta2175/ChaiTailwind-CSS) | Tailwind-inspired utility-CSS compiler — reads HTML, extracts classes, emits CSS | Node.js, zero dependencies |
+| [**Wanderlust**](https://github.com/Sahilgupta2175/Wanderlust) | Airbnb-inspired property rental platform with auth and bookings | Node.js · Express · MongoDB |
+| [**InShare**](https://github.com/Sahilgupta2175/inshare-project) | File sharing via email or direct links | Node.js · Express · MongoDB |
+| [**URL Shortener**](https://github.com/Sahilgupta2175/URL-Shortner) | Turns long URLs into short, shareable links | React · Vite · Node.js · MongoDB |
+| [**Portfolio**](https://github.com/Sahilgupta2175/Sahil-Gupta-Portfolio) · [live](https://sahilgupta-sg.vercel.app) | Personal portfolio with EmailJS contact form and auto-reply | React · Vite · Tailwind CSS |
 
-</div>
+### 🛠️ Engineering Stack
 
-## GitHub Stats
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=js,html,css,react,redux,nextjs,tailwind,bootstrap,nodejs,express,mongodb,mysql,postgres,java,git,postman,vscode&theme=dark&perline=9">
+    <img src="https://skillicons.dev/icons?i=js,html,css,react,redux,nextjs,tailwind,bootstrap,nodejs,express,mongodb,mysql,postgres,java,git,postman,vscode&theme=light&perline=9" alt="JavaScript, HTML, CSS, React, Redux, Next.js, Tailwind CSS, Bootstrap, Node.js, Express, MongoDB, MySQL, PostgreSQL, Java, Git, Postman, VS Code">
+  </picture>
+</p>
 
-<div align="center">
+### ✍️ Writing
 
-<img height="165" src="https://github-readme-stats-git-master-rickstaa.vercel.app/api?username=Sahilgupta2175&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D0F29&title_color=A597FF&icon_color=7C6CFF&text_color=E6E6F0" alt="GitHub stats"/>
-<img height="165" src="https://github-readme-stats-git-master-rickstaa.vercel.app/api/top-langs/?username=Sahilgupta2175&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D0F29&title_color=A597FF&text_color=E6E6F0" alt="Top languages"/>
+I write about what I build on **[Hashnode](https://sahilxdev.hashnode.dev)**.
 
-<img src="https://streak-stats.demolab.com/?user=Sahilgupta2175&theme=tokyonight&hide_border=true&background=0D0F29&ring=7C6CFF&fire=A597FF&currStreakLabel=A597FF" alt="GitHub streak"/>
+---
 
-</div>
+<h2 align="center">📊 GitHub Activity</h2>
 
-## Let's Connect
+<p align="center">
+  <img src="https://readme-craft-sg.vercel.app/api/card/Sahilgupta2175.svg?mode=light" height="165" alt="GitHub stats, generated by README Craft">
+  <img src="https://readme-craft-sg.vercel.app/api/streak/Sahilgupta2175.svg?mode=light" height="165" alt="Contribution streak, generated by README Craft">
+</p>
 
-<div align="center">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Sahilgupta2175/Sahilgupta2175/output/github-snake-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Sahilgupta2175/Sahilgupta2175/output/github-snake.svg">
+    <img src="https://raw.githubusercontent.com/Sahilgupta2175/Sahilgupta2175/output/github-snake.svg" alt="GitHub contribution snake" width="100%">
+  </picture>
+</p>
 
-<a href="mailto:guptasahil2175@gmail.com"><img src="https://img.shields.io/badge/Say%20hi-guptasahil2175%40gmail.com-7C6CFF?style=for-the-badge&labelColor=0B0C22" alt="Email me"/></a>
+---
 
-</div>
+<h2 align="center">📫 Connect</h2>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:5B4FE9,100:8E7DFF&height=120&section=footer" width="100%"/>
-
-<div align="center"><sub>© 2026 Sahil Gupta - thanks for stopping by 👋</sub></div>
+<p align="center">
+  <a href="https://sahilgupta.tech"><img src="https://img.shields.io/badge/Website-sahilgupta.tech-0891B2?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website"></a>
+  <a href="https://www.linkedin.com/in/sahil-gupta-35199620a/"><img src="https://img.shields.io/badge/LinkedIn-Sahil_Gupta-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
+  <a href="https://sahilxdev.hashnode.dev"><img src="https://img.shields.io/badge/Hashnode-sahilxdev-2962FF?style=for-the-badge&logo=hashnode&logoColor=white" alt="Hashnode blog"></a>
+  <a href="https://peerlist.io/sahilgupta2175"><img src="https://img.shields.io/badge/Peerlist-sahilgupta2175-00AA45?style=for-the-badge&logoColor=white" alt="Peerlist"></a>
+</p>
