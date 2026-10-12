@@ -1,38 +1,58 @@
 // Builds the GitHub profile: assets/*.svg (dark + light) and README.md.
 //
-//   node scripts/build.mjs
+//   node scripts/build.mjs          (set GITHUB_TOKEN for the contribution calendar)
 //
 // Node 18+, no dependencies. Runs daily in .github/workflows/profile.yml.
-// Design: the portfolio's v3 look (ink/ivory, hairlines, one lime accent).
-// GitHub strips CSS/JS from READMEs, so every visual lives in SVG images:
-// fonts are subset per file and embedded (images can't load web fonts), text
-// that must fit uses textLength, and all motion is CSS/SMIL inside the SVG.
+//
+// Design: native to GitHub rather than a copy of the portfolio. GitHub's own
+// typeface (Mona Sans, variable width), Primer colours, Universe-style glow,
+// and GitHub metaphors: a README file header, a Copilot ghost-text
+// completion, pinned-repo cards with live stars/forks, a contribution
+// heatmap redrawn from the real calendar, and posts as a `git log`.
+//
+// GitHub strips CSS/JS from READMEs, so every visual is an SVG image: fonts
+// are subset per file and embedded, text that must fit uses textLength, and
+// all motion is CSS/SMIL inside the SVG (switched off for reduced motion).
 
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, readdir, unlink } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import config from '../profile.config.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ASSETS = path.join(ROOT, 'assets');
 const DATA_FILE = path.join(ASSETS, 'data.json');
-const W = 1200; // every SVG is 1200 wide; GitHub scales it to the column
+const W = 1200; // full-width SVGs; GitHub scales them to the column
+const CARD_W = 590; // pinned cards, two per row
 
+// Primer-based palettes (GitHub's own design tokens, lightly tuned).
 const THEMES = {
   dark: {
-    bg: '#000000', surface: '#0B0C09', surface2: '#14160F', line: '#22251C', line2: '#363A2C',
-    text: '#EEEDE6', text2: '#B4B2A8', muted: '#8A887F', accent: '#C8F169', ink: '#C8F169', onAccent: '#000000'
+    canvas: '#0d1117', subtle: '#151b23', inset: '#010409', border: '#3d444d', borderMuted: '#262c36',
+    fg: '#f0f6fc', fg2: '#d1d7e0', muted: '#9198a1', link: '#4493f8', green: '#3fb950', purple: '#ab7df8',
+    pink: '#f778ba', string: '#a5d6ff', keyword: '#ff7b72', btn: '#238636', onBtn: '#ffffff',
+    heat: ['#151b23', '#033a16', '#196c2e', '#2ea043', '#56d364'], glow: 0.32
   },
   light: {
-    bg: '#F3F2EC', surface: '#FBFAF6', surface2: '#E9E8E0', line: '#D9D7CD', line2: '#BDBBAF',
-    text: '#0B0C09', text2: '#3A3C33', muted: '#5E6055', accent: '#C8F169', ink: '#4F6128', onAccent: '#000000'
+    canvas: '#ffffff', subtle: '#f6f8fa', inset: '#f6f8fa', border: '#d1d9e0', borderMuted: '#e4e8ec',
+    fg: '#1f2328', fg2: '#393f46', muted: '#59636e', link: '#0969da', green: '#1a7f37', purple: '#8250df',
+    pink: '#bf3989', string: '#0a3069', keyword: '#cf222e', btn: '#1f883d', onBtn: '#ffffff',
+    heat: ['#eff2f5', '#aceebb', '#4ac26b', '#2da44e', '#116329'], glow: 0.16
   }
 };
 
+// One variable file per family covers every weight/width a file uses.
 const FONTS = {
-  display: { css: 'Bricolage+Grotesque', weight: 800, name: 'Bricolage Grotesque', stack: "'Bricolage Grotesque','Arial Black','Helvetica Neue',Arial,sans-serif" },
-  body: { css: 'Hanken+Grotesk', weight: 400, name: 'Hanken Grotesk', stack: "'Hanken Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif" },
-  mono: { css: 'JetBrains+Mono', weight: 400, name: 'JetBrains Mono', stack: "'JetBrains Mono',SFMono-Regular,Menlo,Consolas,monospace" }
+  sans: { css: 'Mona+Sans:wdth,wght@100..125,400..850', name: 'Mona Sans', stack: "'Mona Sans','Segoe UI','Helvetica Neue',Arial,sans-serif" },
+  mono: { css: 'Martian+Mono:wght@400', name: 'Martian Mono', stack: "'Martian Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" }
+};
+
+// Language colours as GitHub (linguist) shows them.
+const LANG_COLORS = {
+  JavaScript: '#f1e05a', TypeScript: '#3178c6', HTML: '#e34c26', CSS: '#563d7c', SCSS: '#c6538c',
+  Java: '#b07219', Python: '#3572A5', EJS: '#a91e50', 'Jupyter Notebook': '#DA5B0B', Shell: '#89e051',
+  C: '#555555', 'C++': '#f34b7d', Go: '#00ADD8', PHP: '#4F5D95', Vue: '#41b883', Dockerfile: '#384d54'
 };
 
 const EASE = 'cubic-bezier(.2,.8,.2,1)';
@@ -43,31 +63,25 @@ const esc = (s) => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-// Rough advance widths (in em) used only to wrap text and decide when a line
-// needs textLength to fit. Deliberately generous so estimates err wide.
-const WIDTHS = {
-  display: { upper: 0.68, lower: 0.56, digit: 0.6, space: 0.26, other: 0.36 },
-  body: { upper: 0.66, lower: 0.52, digit: 0.56, space: 0.27, other: 0.34 },
-  mono: { upper: 0.6, lower: 0.6, digit: 0.6, space: 0.6, other: 0.6 }
-};
-const measure = (font, size, str, letterSpacing = 0) => {
-  const t = WIDTHS[font];
+// Rough advance widths (em) for wrapping and fit checks; generous on purpose.
+const measure = (font, size, str, stretch = 100) => {
+  if (font === 'mono') return String(str).length * size * 0.66 * (stretch / 100);
   let em = 0;
   for (const ch of String(str)) {
-    if (/[A-Z]/.test(ch)) em += t.upper;
-    else if (/[a-z]/.test(ch)) em += t.lower;
-    else if (/[0-9]/.test(ch)) em += t.digit;
-    else if (ch === ' ') em += t.space;
-    else em += t.other;
+    if (/[A-Z]/.test(ch)) em += 0.69;
+    else if (/[a-z]/.test(ch)) em += 0.56;
+    else if (/[0-9]/.test(ch)) em += 0.62;
+    else if (ch === ' ') em += 0.27;
+    else em += 0.36;
   }
-  return em * size + letterSpacing * Math.max(0, String(str).length - 1);
+  return em * size * (stretch / 100);
 };
-const wrap = (font, size, str, maxW, maxLines = 99) => {
+const wrap = (size, str, maxW, maxLines = 99, stretch = 100) => {
   const lines = [];
   let cur = '';
   for (const word of String(str).split(/\s+/).filter(Boolean)) {
     const next = cur ? `${cur} ${word}` : word;
-    if (cur && measure(font, size, next) > maxW) {
+    if (cur && measure('sans', size, next, stretch) > maxW) {
       lines.push(cur);
       cur = word;
     } else cur = next;
@@ -75,72 +89,83 @@ const wrap = (font, size, str, maxW, maxLines = 99) => {
   if (cur) lines.push(cur);
   if (lines.length > maxLines) {
     lines.length = maxLines;
-    lines[maxLines - 1] = lines[maxLines - 1].replace(/\s*\S*$/, '') + '…';
+    lines[maxLines - 1] = `${lines[maxLines - 1].replace(/\s*\S*$/, '')}…`;
   }
   return lines;
 };
-const fmtDate = (d) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' }).toUpperCase();
+// textLength attribute only when the estimate says the text would overflow.
+const fit = (font, size, str, maxW, stretch = 100) =>
+  (measure(font, size, str, stretch) > maxW ? `textLength="${Math.round(maxW)}" lengthAdjust="spacingAndGlyphs"` : '');
+
+const ago = (date) => {
+  const days = Math.max(0, Math.round((Date.now() - new Date(date)) / 86400000));
+  if (days === 0) return 'today';
+  if (days === 1) return 'yesterday';
+  if (days < 30) return `${days} days ago`;
+  const months = Math.round(days / 30);
+  return months < 12 ? `${months} month${months > 1 ? 's' : ''} ago` : `${Math.round(months / 12)} year(s) ago`;
+};
+const shortSha = (s) => crypto.createHash('sha1').update(String(s)).digest('hex').slice(0, 7);
+const repoName = (url) => (url ? url.replace(/\/+$/, '').split('/').pop() : '');
 
 // ---------------------------------------------------------------- fonts
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
 const fontCache = new Map();
 
-// @font-face rules with the font subset to exactly `chars`, base64-embedded.
-// On any failure returns '' and the SVG falls back to system fonts.
-const fontFaces = async (family, weight, chars) => {
+// Variable @font-face rules subset to exactly `chars`, base64-embedded.
+// On failure returns '' and the SVG falls back to system fonts.
+const fontFaces = (family, chars) => {
   const glyphs = [...new Set(chars)].filter((c) => c.trim()).sort().join('');
-  if (!glyphs) return '';
-  const key = `${family}:${weight}:${glyphs}`;
-  if (fontCache.has(key)) return fontCache.get(key);
-  const job = (async () => {
-    try {
-      const url = `https://fonts.googleapis.com/css2?family=${FONTS[family].css}:wght@${weight}&text=${encodeURIComponent(glyphs + ' ')}&display=block`;
-      const css = await (await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(15000) })).text();
-      const faces = [...css.matchAll(/font-weight:\s*(\d+);[\s\S]*?src:\s*url\(([^)]+)\)\s*format\('woff2'\)/g)];
-      const rules = await Promise.all(faces.map(async ([, weight, src]) => {
-        const buf = Buffer.from(await (await fetch(src, { signal: AbortSignal.timeout(15000) })).arrayBuffer());
-        return `@font-face{font-family:'${FONTS[family].name}';font-weight:${weight};src:url(data:font/woff2;base64,${buf.toString('base64')}) format('woff2');}`;
-      }));
-      return rules.join('');
-    } catch (e) {
-      console.warn(`  ⚠ font ${family} ${weight}: ${e.message} (using system fonts)`);
-      return '';
-    }
-  })();
-  fontCache.set(key, job);
-  return job;
+  if (!glyphs) return Promise.resolve('');
+  const key = `${family}:${glyphs}`;
+  if (!fontCache.has(key)) {
+    fontCache.set(key, (async () => {
+      try {
+        const url = `https://fonts.googleapis.com/css2?family=${FONTS[family].css}&text=${encodeURIComponent(`${glyphs} `)}&display=block`;
+        const css = await (await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(15000) })).text();
+        const blocks = [...css.matchAll(/@font-face\s*{([^}]*)}/g)].map((m) => m[1]);
+        const rules = await Promise.all(blocks.map(async (b) => {
+          const src = (b.match(/src:\s*url\(([^)]+)\)/) || [])[1];
+          if (!src) return '';
+          const weight = (b.match(/font-weight:\s*([^;]+);/) || [])[1] || '400';
+          const stretch = (b.match(/font-stretch:\s*([^;]+);/) || [])[1] || '100%';
+          const buf = Buffer.from(await (await fetch(src, { signal: AbortSignal.timeout(15000) })).arrayBuffer());
+          return `@font-face{font-family:'${FONTS[family].name}';font-weight:${weight};font-stretch:${stretch};src:url(data:font/woff2;base64,${buf.toString('base64')}) format('woff2');}`;
+        }));
+        return rules.join('');
+      } catch (e) {
+        console.warn(`  ⚠ font ${family}: ${e.message} (using system fonts)`);
+        return '';
+      }
+    })());
+  }
+  return fontCache.get(key);
 };
 
-// One SVG document. Text goes through doc.t(font, str, weight) so the builder
-// embeds exactly the glyphs (and weights) each file uses.
+// One SVG document; text goes through doc.t()/doc.m() so the builder knows
+// which glyphs to embed.
 class Doc {
   constructor(theme) {
+    this.theme = theme;
     this.c = THEMES[theme];
-    this.used = {};
-    this.ids = 0;
+    this.used = { sans: '', mono: '' };
+    this.n = 0;
   }
-  t(font, str, weight = FONTS[font].weight) {
-    const key = `${font}:${weight}`;
-    this.used[key] = (this.used[key] || '') + str;
-    return esc(str);
-  }
-  id(prefix) {
-    this.ids += 1;
-    return `${prefix}${this.ids}`;
-  }
-  async render({ height, title, body, css = '' }) {
-    const faces = (await Promise.all(Object.entries(this.used).map(([key, chars]) => {
-      const [font, weight] = key.split(':');
-      return fontFaces(font, weight, chars);
-    }))).join('');
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${height}" viewBox="0 0 ${W} ${height}" role="img" aria-label="${esc(title)}">
+  t(str) { this.used.sans += str; return esc(str); }
+  m(str) { this.used.mono += str; return esc(str); }
+  id(p) { this.n += 1; return `${p}${this.n}`; }
+  async render({ width = W, height, title, body, css = '' }) {
+    const faces = (await Promise.all(Object.keys(this.used).map((f) => fontFaces(f, this.used[f])))).join('');
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(title)}">
 <title>${esc(title)}</title>
 <style>${faces}
-.d{font-family:${FONTS.display.stack}}.b{font-family:${FONTS.body.stack}}.m{font-family:${FONTS.mono.stack}}
-@keyframes rise{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:none}}
-.rise{animation:rise .9s ${EASE} both}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.s{font-family:${FONTS.sans.stack}}.m{font-family:${FONTS.mono.stack}}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.up{animation:up .8s ${EASE} both}
+@keyframes blurin{from{opacity:0;filter:blur(8px)}to{opacity:1;filter:none}}
+.blurin{animation:blurin 1s ${EASE} both}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .pulse{animation:pulse 2s ease-in-out infinite}
 ${css}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
@@ -152,337 +177,396 @@ ${body}
 
 const delay = (ms) => `style="animation-delay:${ms}ms"`;
 
-// Rounded tile with a hairline border.
-const tile = (d, x, y, w, h, fill = d.c.surface) =>
-  `<rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="22" fill="${fill}" stroke="${d.c.line}"/>`;
+// Blue → purple → pink, the Copilot/Universe gradient. Repeats so it can slide.
+const gradientDef = (d, id, { x2 = 600, slide = false } = {}) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="${x2}" y2="0" spreadMethod="repeat">
+  <stop offset="0" stop-color="${d.c.link}"/><stop offset=".33" stop-color="${d.c.purple}"/><stop offset=".66" stop-color="${d.c.pink}"/><stop offset="1" stop-color="${d.c.link}"/>
+  ${slide ? `<animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="${x2} 0" dur="9s" repeatCount="indefinite"/>` : ''}
+</linearGradient>`;
 
-const eyebrow = (d, x, y, str, color = d.c.muted, anchor = 'start') =>
-  `<text x="${x}" y="${y}" class="m" font-size="13" letter-spacing="1.6" fill="${color}" text-anchor="${anchor}">${d.t('mono', str.toUpperCase())}</text>`;
+// Drifting, blurred colour orbs clipped to a card.
+const orbs = (d, clipId, w, h, spots) => `<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="70"/></filter>
+<g clip-path="url(#${clipId})" filter="url(#soft)" opacity="${d.c.glow}">
+${spots.map(([cx, cy, r, color, dx, dy, dur]) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}"><animateTransform attributeName="transform" type="translate" values="0 0;${dx} ${dy};0 0" dur="${dur}s" repeatCount="indefinite"/></circle>`).join('\n')}
+</g>`;
 
-// Odometer: each digit column rolls a full turn and lands on its digit. The
-// resting (no-animation) state already shows the final number, so reduced
-// motion or a blocked animation still reads correctly.
-const odometer = (d, x, baseline, size, value, start = 0) => {
-  const str = String(value ?? '');
-  const colW = size * 0.62;
-  const lh = size * 1.05;
-  let out = '';
-  let css = '';
-  let cx = x;
-  [...str].forEach((ch, i) => {
-    if (!/[0-9]/.test(ch)) {
-      out += `<text x="${cx}" y="${baseline}" class="d" font-weight="800" font-size="${size}" fill="${d.c.ink}">${d.t('display', ch)}</text>`;
-      cx += measure('display', size, ch);
-      return;
-    }
-    const digit = Number(ch);
-    // Index 0 (resting) is the target; the animation starts at the last index
-    // (a 0 one full turn earlier) and rolls up through the digits to it.
-    const seq = [...Array.from({ length: digit + 1 }, (_, k) => digit - k), ...Array.from({ length: 10 }, (_, k) => 9 - k)];
-    const clip = d.id('od');
-    const anim = d.id('roll');
-    const travel = (seq.length - 1) * lh;
-    css += `@keyframes ${anim}{from{transform:translateY(-${travel}px)}to{transform:none}}.${anim}{animation:${anim} 1.6s ${EASE} ${start + i * 120}ms both}`;
-    out += `<clipPath id="${clip}"><rect x="${cx}" y="${baseline - size * 0.82}" width="${colW}" height="${size * 1.02}"/></clipPath>
-<g clip-path="url(#${clip})"><g class="${anim}">${seq.map((n, k) => `<text x="${cx + colW / 2}" y="${baseline + k * lh}" text-anchor="middle" class="d" font-weight="800" font-size="${size}" fill="${d.c.text}">${d.t('display', String(n))}</text>`).join('')}</g></g>`;
-    cx += colW;
-  });
-  return { svg: out, css, width: cx - x };
+// Simple geometric icons (16px grid), stroked in the current colour.
+const ICON = {
+  repo: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h9.5v11H4.5A1.5 1.5 0 0 1 3 12V2.5Z"/><path d="M3 11.5A1.5 1.5 0 0 1 4.5 10h8"/><path d="M6 13.5v2l1.25-.9 1.25.9v-2"/></g>`,
+  fork: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round"><circle cx="4" cy="3" r="1.6"/><circle cx="12" cy="3" r="1.6"/><circle cx="8" cy="13" r="1.6"/><path d="M4 4.6v1.4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V4.6M8 8v3.4"/></g>`,
+  star: (x, y, color) => {
+    const pts = Array.from({ length: 10 }, (_, i) => {
+      const a = -Math.PI / 2 + (i * Math.PI) / 5;
+      const r = i % 2 ? 3.2 : 7.2;
+      return `${(8 + r * Math.cos(a)).toFixed(2)},${(8.4 + r * Math.sin(a)).toFixed(2)}`;
+    }).join(' ');
+    return `<g transform="translate(${x} ${y})"><polygon points="${pts}" fill="none" stroke="${color}" stroke-width="1.4" stroke-linejoin="round"/></g>`;
+  },
+  pin: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 1.5l5 5-2.5 1-3 3 .5 3-1.5 1.5-6-6L3.5 7.5l3 .5 3-3 0-3.5Z"/><path d="M5 11l-3.5 3.5"/></g>`,
+  graph: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 1.5v13h13"/><path d="M4 10l3-3 2.5 2.5L14 5"/></g>`,
+  commit: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M1 8h4M11 8h4"/></g>`,
+  pulse: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h3l2-5 4 10 2-5h3"/></g>`,
+  arrow: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5l7-7M6 4.5h5.5V10"/></g>`
 };
 
 // ---------------------------------------------------------------- components
 
-const hero = async (theme, data) => {
+// Hero: a README "file" with a Copilot-style ghost-text completion.
+const hero = async (theme, data, avatar) => {
   const d = new Doc(theme);
   const c = d.c;
-  const H = 600;
-  const L = 56;
-  const R = W - 56;
-
-  // Name: two words pushed to the edges, sized by textLength so it fits
-  // whatever font the viewer ends up with.
-  const size = 158;
-  const first = config.name.split(' ')[0].toUpperCase();
-  const last = config.name.split(' ').slice(1).join(' ').toUpperCase();
-  const w1 = Math.round(measure('display', size, first) * 0.9);
-  const w2 = Math.round(measure('display', size, `${last}.`) * 0.9);
-  const nameY = 300;
-  const word = (fill, stroke) => `
-    <g class="rise" ${delay(120)}><text x="${L}" y="${nameY}" textLength="${w1}" lengthAdjust="spacingAndGlyphs" class="d" font-weight="800" font-size="${size}" fill="${fill}" ${stroke}>${d.t('display', first)}</text></g>
-    <g class="rise" ${delay(300)}><text x="${R}" y="${nameY}" text-anchor="end" textLength="${w2}" lengthAdjust="spacingAndGlyphs" class="d" font-weight="800" font-size="${size}" fill="${fill}" ${stroke}>${d.t('display', last)}<tspan fill="${stroke ? 'none' : c.ink}">${d.t('display', '.')}</tspan></text></g>`;
-
-  // The "lens": a circle sweeping across the name shows it as an outline,
-  // the same idea as the cursor lens on the site.
-  const sweep = `<animateTransform attributeName="transform" type="translate" values="-200 0;-200 0;${W + 200} 0" keyTimes="0;0.35;1" dur="7s" repeatCount="indefinite"/>`;
-  const lensY = nameY - size * 0.36;
-
+  const H = 470;
   const role = data.role;
-  const pill = role ? `Now at ${role.company} · ${role.role}` : 'Available for new opportunities';
-  const pillW = measure('mono', 14, pill) + 60;
-  const taglineLines = wrap('body', 26, config.tagline, 640);
 
-  const body = `
-<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
-<mask id="hole"><rect width="${W}" height="${H}" fill="#fff"/><circle cx="0" cy="${lensY}" r="118" fill="#000">${sweep}</circle></mask>
-<mask id="lens"><rect width="${W}" height="${H}" fill="#000"/><circle cx="0" cy="${lensY}" r="118" fill="#fff">${sweep}</circle></mask>
-<rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="28" fill="${c.bg}" stroke="${c.line}"/>
-<clipPath id="card"><rect width="${W}" height="${H}" rx="28"/></clipPath>
-<rect width="${W}" height="${H}" filter="url(#grain)" clip-path="url(#card)" opacity="${theme === 'dark' ? 0.07 : 0.1}"/>
+  // Copilot line: typed prefix, ghost suggestion streams in, Tab, accepted.
+  const size = 19;
+  const key = 'focus';
+  const typed = '"full-stack products';
+  const ghost = ' with React, Node.js and MongoDB",';
+  const full = `${key}: ${typed}${ghost}`;
+  const lineX = 112;
+  const lineY = 410;
+  const fullW = Math.round(full.length * size * 0.66);
+  const typedLen = `${key}: ${typed}`.length;
+  const typedW = Math.round(fullW * (typedLen / full.length));
+  const DUR = 10;
+  const steps = 9;
+  const ghostW = fullW - typedW;
+  // The suggestion streams in chunk by chunk (12%-36% of the loop), waits for
+  // Tab, then disappears at 48% when the accepted line takes its place.
+  const widths = [0, ...Array.from({ length: steps }, (_, i) => Math.round((ghostW * (i + 1)) / steps)), 0, 0];
+  const times = [0, ...Array.from({ length: steps }, (_, i) => +(0.12 + (0.24 * i) / (steps - 1)).toFixed(3)), 0.48, 1];
+  const tokens = (k, s, rest) => `<tspan fill="${c.keyword}">${d.m(k)}</tspan><tspan fill="${c.fg2}">${d.m(': ')}</tspan><tspan fill="${c.string}">${d.m(s)}</tspan>${rest ? `<tspan fill="${c.string}">${d.m(rest)}</tspan>` : ''}`;
 
-${eyebrow(d, L, 66, `Portfolio · ${new Date().getFullYear()}`)}
-${eyebrow(d, W / 2, 66, config.role, c.muted, 'middle')}
-${eyebrow(d, R, 66, config.location, c.muted, 'end')}
-<line x1="${L}" y1="90" x2="${R}" y2="90" stroke="${c.line}"/>
+  const name = config.name;
+  const nameSize = 92;
+  const nameMax = W - 240 - 40;
 
-<g mask="url(#hole)">${word(c.text, '')}</g>
-<g mask="url(#lens)">${word('none', `stroke="${c.ink}" stroke-width="2.5"`)}</g>
-<circle cx="0" cy="${lensY}" r="118" fill="none" stroke="${c.ink}" stroke-opacity=".35" stroke-dasharray="4 8">${sweep}</circle>
+  const body = `<defs>
+<clipPath id="card"><rect width="${W}" height="${H}" rx="22"/></clipPath>
+<clipPath id="av"><circle cx="112" cy="190" r="56"/></clipPath>
+<clipPath id="ghostclip"><rect x="${lineX + typedW}" y="${lineY - 26}" height="40" width="0"><animate attributeName="width" values="${widths.join(';')}" keyTimes="${times.join(';')}" dur="${DUR}s" repeatCount="indefinite" calcMode="discrete"/></rect></clipPath>
+${gradientDef(d, 'g', { slide: true })}
+${gradientDef(d, 'ring', { x2: 140 })}
+<pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="${c.border}" stroke-width="1"/></pattern>
+<radialGradient id="fade" cx=".75" cy=".2" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+<mask id="gridmask"><rect width="${W}" height="${H}" fill="url(#fade)"/></mask>
+</defs>
+<rect width="${W}" height="${H}" rx="22" fill="${c.subtle}"/>
+${orbs(d, 'card', W, H, [[980, 60, 210, c.purple, -120, 60, 19], [760, 380, 180, c.link, 140, -40, 23], [1160, 360, 160, c.pink, -80, -70, 17]])}
+<rect width="${W}" height="${H}" fill="url(#grid)" mask="url(#gridmask)" opacity=".55" clip-path="url(#card)"/>
+<rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="22" fill="none" stroke="${c.border}"/>
 
-<g class="rise" ${delay(520)}>
-${taglineLines.map((ln, i) => `<text x="${L}" y="${384 + i * 36}" class="b" font-size="26" fill="${c.text2}">${d.t('body', ln)}</text>`).join('\n')}
+<!-- file header, like a README on GitHub -->
+${ICON.repo(32, 30, c.muted)}
+<text x="58" y="44" class="m" font-size="13" fill="${c.muted}">${d.m(config.user)}<tspan fill="${c.muted}"> / </tspan><tspan fill="${c.fg}">${d.m('README.md')}</tspan></text>
+<circle cx="${W - 158}" cy="40" r="4.5" fill="${c.green}" class="pulse"/>
+<text x="${W - 32}" y="44" text-anchor="end" class="m" font-size="12" fill="${c.muted}">${d.m('synced daily')}</text>
+<line x1="0" y1="72" x2="${W}" y2="72" stroke="${c.borderMuted}"/>
+
+<!-- avatar with a rotating gradient ring -->
+<g class="up">
+  <circle cx="112" cy="190" r="63" fill="none" stroke="url(#ring)" stroke-width="3.5" stroke-dasharray="290 106" stroke-linecap="round">
+    <animateTransform attributeName="transform" type="rotate" from="0 112 190" to="360 112 190" dur="12s" repeatCount="indefinite"/>
+  </circle>
+  ${avatar ? `<image href="${avatar}" x="56" y="134" width="112" height="112" clip-path="url(#av)" preserveAspectRatio="xMidYMid slice"/>` : `<circle cx="112" cy="190" r="56" fill="${c.border}"/>`}
 </g>
 
-<g class="rise" ${delay(700)}>
-  <rect x="${L + 0.5}" y="${H - 104.5}" width="${pillW}" height="44" rx="22" fill="none" stroke="${c.line2}"/>
-  <circle cx="${L + 26}" cy="${H - 82}" r="5" fill="${c.accent}" class="pulse"/>
-  <text x="${L + 42}" y="${H - 77}" class="m" font-size="14" fill="${c.text2}">${d.t('mono', pill)}</text>
+<g class="up" ${delay(120)}>
+  <text x="208" y="170" class="m" font-size="14" fill="${c.muted}">${d.m(`@${config.user}`)}</text>
+  <text x="204" y="250" class="s" font-size="${nameSize}" font-weight="850" font-stretch="125%" letter-spacing="-2" fill="url(#g)" ${fit('sans', nameSize, name, nameMax, 125)}>${d.t(name)}</text>
 </g>
 
-<g class="rise" ${delay(820)}>
-  ${eyebrow(d, R - 26, H - 76, 'Scroll', c.muted, 'end')}
-  <rect x="${R - 1}" y="${H - 110}" width="1" height="56" fill="${c.line2}"/>
-  <rect x="${R - 1}" y="${H - 110}" width="1" height="56" fill="${c.text}" class="cue"/>
+<g class="up" ${delay(260)}>
+  <rect x="208.5" y="276.5" width="${Math.round(measure('mono', 13, `${role ? `${role.role} @ ${role.company}` : config.role} · ${config.location}`)) + 44}" height="30" rx="15" fill="${c.canvas}" fill-opacity=".6" stroke="${c.border}"/>
+  <circle cx="226" cy="291.5" r="4" fill="${c.green}"/>
+  <text x="238" y="296" class="m" font-size="13" fill="${c.fg2}">${d.m(`${role ? `${role.role} @ ${role.company}` : config.role} · ${config.location}`)}</text>
+</g>
+
+<!-- editor strip with the ghost-text completion -->
+<g class="up" ${delay(400)}>
+  <rect x="40.5" y="352.5" width="${W - 81}" height="88" rx="12" fill="${c.inset}" fill-opacity="${theme === 'dark' ? 0.75 : 0.9}" stroke="${c.border}"/>
+  <text x="62" y="380" class="m" font-size="12" fill="${c.muted}">${d.m('1')}</text>
+  <text x="62" y="${lineY}" class="m" font-size="12" fill="${c.muted}">${d.m('2')}</text>
+  <text x="${lineX}" y="380" class="m" font-size="13" fill="${c.muted}">${d.m('// what I build')}</text>
+  <!-- ghost suggestion (muted), revealed chunk by chunk -->
+  <g clip-path="url(#ghostclip)"><text x="${lineX}" y="${lineY}" class="m" font-size="${size}" font-style="italic" fill="${c.muted}" textLength="${fullW}" lengthAdjust="spacing">${d.m(full)}</text></g>
+  <!-- typed prefix -->
+  <text x="${lineX}" y="${lineY}" class="m" font-size="${size}" textLength="${typedW}" lengthAdjust="spacing">${tokens(key, typed)}</text>
+  <!-- accepted line -->
+  <text x="${lineX}" y="${lineY}" class="m" font-size="${size}" textLength="${fullW}" lengthAdjust="spacing" opacity="0">${tokens(key, typed, ghost)}
+    <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.46;.49;.94;1" dur="${DUR}s" repeatCount="indefinite"/></text>
+  <!-- Tab hint -->
+  <g opacity="0">
+    <rect x="${lineX + fullW + 14}" y="${lineY - 19}" width="46" height="26" rx="6" fill="none" stroke="${c.border}"/>
+    <text x="${lineX + fullW + 37}" y="${lineY - 1}" text-anchor="middle" class="m" font-size="12" fill="${c.fg2}">${d.m('Tab')}</text>
+    <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.37;.39;.46;.48;1" dur="${DUR}s" repeatCount="indefinite"/>
+  </g>
+  <rect x="${lineX + typedW + 1}" y="${lineY - 18}" width="2" height="22" fill="${c.link}">
+    <animate attributeName="x" values="${lineX + typedW + 1};${lineX + typedW + 1};${lineX + fullW + 2};${lineX + fullW + 2};${lineX + typedW + 1}" keyTimes="0;.47;.49;.94;1" dur="${DUR}s" repeatCount="indefinite" calcMode="discrete"/>
+    <animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite" calcMode="discrete"/>
+  </rect>
 </g>`;
 
   return d.render({
     height: H,
-    title: `${config.name}. ${config.role}. ${config.tagline}${role ? ` Now at ${role.company} as ${role.role}.` : ''}`,
-    body,
-    css: `@keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-.cue{transform-box:fill-box;animation:cue 2.2s cubic-bezier(.7,0,.3,1) infinite}`
+    title: `${name} (@${config.user}). ${role ? `${role.role} at ${role.company}, ${config.location}. ` : ''}Builds full-stack products with React, Node.js and MongoDB.`,
+    body
   });
 };
 
-const bento = async (theme, data, avatar) => {
+// Insights strip: contributions sparkline, repos, problems, language bar.
+const insights = async (theme, data) => {
   const d = new Doc(theme);
   const c = d.c;
-  const G = 16;
-  const col = (W - 3 * G) / 4; // 288
-  const rowH = 210;
-  const x = (i) => i * (col + G);
-  const y = (i) => i * (rowH + G);
-  let css = '';
-  const parts = [];
+  const H = 214;
+  const cellW = W / 4;
+  const gh = data.github || {};
+  const cells = [];
+  const cell = (i, label, value, sub, extra = '') => `<g class="up" ${delay(i * 90)}>
+  <text x="${i * cellW + 32}" y="48" class="m" font-size="11" letter-spacing="1.4" fill="${c.muted}">${d.m(label.toUpperCase())}</text>
+  ${value != null ? `<text x="${i * cellW + 30}" y="116" class="s blurin" ${delay(200 + i * 120)} font-size="56" font-weight="800" font-stretch="112%" letter-spacing="-1.5" fill="${c.fg}">${d.t(String(value))}</text>` : ''}
+  ${sub ? `<text x="${i * cellW + 32}" y="146" class="s" font-size="15" fill="${c.muted}">${d.t(sub)}</text>` : ''}
+  ${extra}
+</g>`;
 
-  // A slow light drifting behind the grid stands in for the site's cursor spotlight.
-  parts.push(`<radialGradient id="glow" gradientUnits="userSpaceOnUse" cx="0" cy="300" r="420">
-  <stop offset="0" stop-color="${c.accent}" stop-opacity="${theme === 'dark' ? 0.12 : 0.22}"/><stop offset="1" stop-color="${c.accent}" stop-opacity="0"/>
-  <animate attributeName="cx" values="-300;${W + 300};-300" dur="16s" repeatCount="indefinite"/>
-  <animate attributeName="cy" values="200;700;200" dur="11s" repeatCount="indefinite"/>
-</radialGradient>`);
-  const glowTile = (tx, ty, tw, th, i) => `<g class="rise" ${delay(i * 70)}>${tile(d, tx, ty, tw, th)}<rect x="${tx}" y="${ty}" width="${tw}" height="${th}" rx="22" fill="url(#glow)"/>`;
-
-  // Intro (2x2)
-  {
-    const tx = x(0);
-    const tw = col * 2 + G;
-    const role = data.role;
-    const pill = role ? `Now at ${role.company}` : 'Available for new opportunities';
-    const headline = 'MERN developer who ships real products, not just repos.';
-    const lines = wrap('display', 46, headline, tw - 64);
-    const hl = new Set(['real', 'products,']);
-    const lineSvg = lines.map((ln, i) => `<text x="${tx + 32}" y="${150 + i * 50}" class="d" font-weight="600" font-size="46" letter-spacing="-1" fill="${c.text}">${ln.split(' ').map((w) => (hl.has(w) ? `<tspan fill="${c.ink}" font-weight="800">${d.t('display', w)}</tspan>` : d.t('display', w, 600))).join(' ')}</text>`).join('');
-    const sub = `${role ? `${role.role} at ${role.company}${role.location ? `, ${role.location}` : ''}. ` : ''}${config.education}.`;
-    const subLines = wrap('body', 18, sub, tw - 64, 3);
-    parts.push(`${glowTile(tx, 0, tw, rowH * 2 + G, 0)}
-  <rect x="${tx + 32.5}" y="32.5" width="${measure('mono', 13, pill) + 54}" height="36" rx="18" fill="none" stroke="${c.line2}"/>
-  <circle cx="${tx + 54}" cy="51" r="4.5" fill="${c.accent}" class="pulse"/>
-  <text x="${tx + 68}" y="56" class="m" font-size="13" fill="${c.text2}">${d.t('mono', pill)}</text>
-  ${lineSvg}
-  ${subLines.map((ln, i) => `<text x="${tx + 32}" y="${rowH * 2 + G - 32 - (subLines.length - 1 - i) * 28}" class="b" font-size="18" fill="${c.text2}">${d.t('body', ln)}</text>`).join('')}
-</g>`);
+  // 1. contributions + monthly sparkline
+  const months = gh.months || [];
+  let spark = '';
+  if (months.length > 1) {
+    const max = Math.max(1, ...months);
+    const x0 = 32;
+    const x1 = cellW - 32;
+    const pts = months.map((v, i) => [x0 + ((x1 - x0) * i) / (months.length - 1), 196 - (v / max) * 30]);
+    const dPath = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+    spark = `<path d="${dPath}" fill="none" stroke="url(#g)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" class="draw"/>
+  <circle cx="${pts[pts.length - 1][0].toFixed(1)}" cy="${pts[pts.length - 1][1].toFixed(1)}" r="4" fill="${c.pink}" class="pulse"/>`;
   }
+  cells.push(cell(0, 'Contributions · 12 mo', gh.contributions ?? '—', 'on GitHub this year', spark));
+  cells.push(cell(1, 'Public repositories', gh.repos ?? '—', `building in public since ${gh.since || 2022}`));
+  cells.push(cell(2, 'Problems solved', data.badge?.number || '150+', 'LeetCode + HackerRank'));
 
-  // Photo (1x2): fades from grey into colour and back, like the site's hover.
-  {
-    const tx = x(2);
-    const th = rowH * 2 + G;
-    const clip = d.id('ph');
-    parts.push(`<g class="rise" ${delay(70)}>
-  <clipPath id="${clip}"><rect x="${tx}" y="0" width="${col}" height="${th}" rx="22"/></clipPath>
-  <filter id="sat"><feColorMatrix type="saturate" values="0"><animate attributeName="values" values="0;0;1;1;0" keyTimes="0;.4;.55;.9;1" dur="12s" repeatCount="indefinite"/></feColorMatrix></filter>
-  <image href="data:image/jpeg;base64,${avatar}" x="${tx}" y="0" width="${col}" height="${th}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${clip})" filter="url(#sat)"/>
-  <rect x="${tx + 0.5}" y=".5" width="${col - 1}" height="${th - 1}" rx="22" fill="none" stroke="${c.line}"/>
-  <rect x="${tx + 12}" y="${th - 60}" width="${col - 24}" height="48" rx="14" fill="${c.bg}" fill-opacity=".78"/>
-  <text x="${tx + 26}" y="${th - 30}" class="b" font-weight="600" font-size="15" fill="${c.text}">${d.t('body', config.name, 600)}</text>
-  <text x="${tx + col - 26}" y="${th - 30}" text-anchor="end" class="m" font-size="11" fill="${c.text2}">${d.t('mono', data.role?.company || 'GLA University')}</text>
-</g>`);
-  }
+  // 4. language bar, GitHub-style
+  const langs = gh.languages || [];
+  const total = langs.reduce((s, l) => s + l.count, 0) || 1;
+  const bx = 3 * cellW + 32;
+  const bw = cellW - 64;
+  let acc = 0;
+  const segs = langs.map((l) => {
+    const w = (l.count / total) * bw;
+    const seg = `<rect x="${(bx + acc).toFixed(1)}" y="78" width="${Math.max(0, w - 2).toFixed(1)}" height="10" rx="3" fill="${LANG_COLORS[l.name] || c.muted}"/>`;
+    acc += w;
+    return seg;
+  }).join('');
+  const legend = langs.slice(0, 4).map((l, i) => {
+    const lx = bx + (i % 2) * (bw / 2);
+    const ly = 124 + Math.floor(i / 2) * 30;
+    return `<circle cx="${lx + 5}" cy="${ly - 4}" r="5" fill="${LANG_COLORS[l.name] || c.muted}"/><text x="${lx + 16}" y="${ly}" class="s" font-size="14" font-weight="600" fill="${c.fg2}">${d.t(l.name)}<tspan font-weight="400" fill="${c.muted}">${d.t(` ${Math.round((l.count / total) * 100)}%`)}</tspan></text>`;
+  }).join('');
+  cells.push(cell(3, 'Languages · by repo', null, null, `<g class="grow">${segs}</g>${legend}`));
 
-  // Problems solved (odometer)
-  {
-    const tx = x(3);
-    const badge = data.badge?.number || '150+';
-    const o = odometer(d, tx + 24, 132, 64, badge, 300);
-    css += o.css;
-    parts.push(`${glowTile(tx, 0, col, rowH, 2)}
-  ${eyebrow(d, tx + 24, 40, 'LeetCode + HackerRank')}
-  ${o.svg}
-  <text x="${tx + 24}" y="166" class="b" font-size="15" fill="${c.text2}">${d.t('body', String(data.badge?.text || 'Problems solved').replace(/\n/g, ' ').toLowerCase())}</text>
-  <rect x="${tx + 24}" y="182" width="${col - 48}" height="4" rx="2" fill="${c.line}"/>
-  <rect x="${tx + 24}" y="182" width="${col - 48}" height="4" rx="2" fill="${c.accent}" class="bar"/>
-</g>`);
-    css += `@keyframes bar{from{transform:scaleX(0)}to{transform:none}}.bar{transform-box:fill-box;transform-origin:left;animation:bar 1.6s ${EASE} 300ms both}`;
-  }
-
-  // GitHub (odometer)
-  {
-    const tx = x(3);
-    const ty = y(1);
-    const gh = data.github || {};
-    const o = odometer(d, tx + 24, ty + 132, 64, gh.repos ?? '–', 500);
-    css += o.css;
-    const sub = gh.contributions ? `${gh.contributions} contributions this year` : `on GitHub since ${gh.since || '2022'}`;
-    parts.push(`${glowTile(tx, ty, col, rowH, 3)}
-  ${eyebrow(d, tx + 24, ty + 40, 'GitHub')}
-  ${o.svg}
-  <text x="${tx + 24}" y="${ty + 166}" class="b" font-size="15" fill="${c.text2}">${d.t('body', 'public repositories')}</text>
-  <text x="${tx + 24}" y="${ty + 188}" class="m" font-size="12" fill="${c.muted}">${d.t('mono', sub)}</text>
-</g>`);
-  }
-
-  // Right now (current work from the admin panel)
-  {
-    const ty = y(2);
-    const tw = col * 2 + G;
-    const items = (data.now || []).slice(0, 2);
-    let rows = '';
-    if (!items.length) {
-      rows = `<text x="24" y="${ty + 100}" class="b" font-size="17" fill="${c.muted}">${d.t('body', 'Heads down on something new. More soon.')}</text>`;
-    }
-    items.forEach((it, i) => {
-      const ry = ty + 66 + i * 70;
-      const status = (it.status || 'Building').toUpperCase();
-      const sw = measure('mono', 11, status) + 22;
-      const desc = wrap('body', 14, it.description || '', tw - sw - 80, 1)[0] || '';
-      rows += `<line x1="24" y1="${ry}" x2="${tw - 24}" y2="${ry}" stroke="${c.line}"/>
-  <rect x="24" y="${ry + 18}" width="${sw}" height="24" rx="12" fill="${i === 0 ? c.accent : c.surface2}"/>
-  <text x="${24 + sw / 2}" y="${ry + 34}" text-anchor="middle" class="m" font-size="11" letter-spacing="1" fill="${i === 0 ? c.onAccent : c.text2}">${d.t('mono', status)}</text>
-  <text x="${24 + sw + 16}" y="${ry + 29}" class="b" font-weight="600" font-size="17" fill="${c.text}">${d.t('body', it.title, 600)}</text>
-  <text x="${24 + sw + 16}" y="${ry + 50}" class="b" font-size="14" fill="${c.muted}">${d.t('body', desc)}</text>`;
-    });
-    parts.push(`${glowTile(0, ty, tw, rowH, 4)}
-  ${eyebrow(d, 24, ty + 40, 'Right now')}
-  ${eyebrow(d, tw - 24, ty + 40, `${items.length} active`, c.muted, 'end')}
-  ${rows}
-</g>`);
-  }
-
-  // Latest post
-  {
-    const tx = x(2);
-    const ty = y(2);
-    const tw = col * 2 + G;
-    const post = (data.posts || [])[0];
-    const lines = post ? wrap('display', 30, post.title, tw - 64, 2) : ['Writing on Hashnode'];
-    parts.push(`${glowTile(tx, ty, tw, rowH, 5)}
-  ${eyebrow(d, tx + 24, ty + 40, 'Latest post · Hashnode', c.ink)}
-  ${lines.map((ln, i) => `<text x="${tx + 24}" y="${ty + 92 + i * 36}" class="d" font-weight="600" font-size="30" letter-spacing="-.5" fill="${c.text}">${d.t('display', ln, 600)}</text>`).join('')}
-  ${post ? `<text x="${tx + 24}" y="${ty + rowH - 28}" class="m" font-size="12" fill="${c.muted}">${d.t('mono', `${fmtDate(post.createdAt)} · ${post.readTime || ''}`)}</text>` : ''}
-</g>`);
-  }
-
-  // Stack chips (full width), height grows with the number of rows.
-  const sy = y(3);
-  let cx = 24;
-  let cy = sy + 64;
-  const chips = [];
-  for (const s of config.stack) {
-    const cw = measure('mono', 15, s) + 30;
-    if (cx + cw > W - 24) {
-      cx = 24;
-      cy += 46;
-    }
-    chips.push(`<rect x="${cx + 0.5}" y="${cy + 0.5}" width="${cw}" height="36" rx="18" fill="none" stroke="${c.line2}"/><text x="${cx + cw / 2}" y="${cy + 23}" text-anchor="middle" class="m" font-size="15" fill="${c.text}">${d.t('mono', s)}</text>`);
-    cx += cw + 8;
-  }
-  const stackH = cy - sy + 36 + 26;
-  parts.push(`${glowTile(0, sy, W, stackH, 6)}
-  ${eyebrow(d, 24, sy + 40, 'Stack')}
-  ${eyebrow(d, W - 24, sy + 40, 'Each project lists what it was built with', c.muted, 'end')}
-  ${chips.join('')}
-</g>`);
-
-  const H = sy + stackH;
   return d.render({
     height: H,
-    title: `At a glance: ${data.role ? `${data.role.role} at ${data.role.company}. ` : ''}${data.badge?.number || '150+'} problems solved. ${data.github?.repos ?? ''} public repositories. Stack: ${config.stack.join(', ')}.`,
-    body: parts.join('\n'),
-    css
+    title: `Insights: ${gh.contributions ?? ''} contributions in the last year, ${gh.repos ?? ''} public repositories, ${data.badge?.number || '150+'} problems solved. Top languages: ${langs.slice(0, 4).map((l) => l.name).join(', ')}.`,
+    body: `<defs>${gradientDef(d, 'g', { x2: cellW })}</defs>
+<rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="18" fill="${c.subtle}" stroke="${c.border}"/>
+${[1, 2, 3].map((i) => `<line x1="${i * cellW}" y1="24" x2="${i * cellW}" y2="${H - 24}" stroke="${c.borderMuted}"/>`).join('')}
+${cells.join('\n')}`,
+    css: `@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}.draw{stroke-dasharray:1;animation:draw 1.8s ${EASE} .4s both}
+@keyframes grow{from{transform:scaleX(0)}to{transform:none}}.grow{transform-box:fill-box;transform-origin:left;animation:grow 1.2s ${EASE} .5s both}`
   });
 };
 
-const sectionTitle = async (theme, text, count) => {
+// Contribution heatmap drawn from the real calendar, columns popping in.
+const heatmap = async (theme, data) => {
   const d = new Doc(theme);
   const c = d.c;
-  const H = 150;
+  const days = data.github?.calendar || [];
+  const H = 270;
+  if (!days.length) {
+    return d.render({
+      height: 120,
+      title: 'Contribution calendar unavailable',
+      body: `<rect x=".5" y=".5" width="${W - 1}" height="119" rx="18" fill="${c.subtle}" stroke="${c.border}"/><text x="40" y="66" class="s" font-size="17" fill="${c.muted}">${d.t('Contribution calendar shows up after the next scheduled build.')}</text>`
+    });
+  }
+  const cell = 16;
+  const gap = 4.2;
+  const x0 = 82;
+  const y0 = 104;
+  const first = new Date(days[0][0]);
+  const offset = first.getUTCDay(); // calendar weeks start on Sunday
+  let rects = '';
+  let monthLabels = '';
+  let lastMonth = -1;
+  const css = [];
+  const cols = Math.ceil((days.length + offset) / 7);
+  for (let col = 0; col < cols; col++) css.push(`.w${col}{animation-delay:${col * 16}ms}`);
+  days.forEach(([date, , level], i) => {
+    const pos = i + offset;
+    const col = Math.floor(pos / 7);
+    const row = pos % 7;
+    const x = x0 + col * (cell + gap);
+    const y = y0 + row * (cell + gap);
+    rects += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${cell}" height="${cell}" rx="4" fill="${c.heat[level] || c.heat[0]}" class="hc w${col}"/>`;
+    const m = new Date(date).getUTCMonth();
+    if (row === 0 && m !== lastMonth && col < cols - 2) {
+      monthLabels += `<text x="${x.toFixed(1)}" y="${y0 - 14}" class="s" font-size="13" fill="${c.muted}">${d.t(new Date(date).toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }))}</text>`;
+      lastMonth = m;
+    }
+  });
+  const last = days.length - 1 + offset;
+  const lx = x0 + Math.floor(last / 7) * (cell + gap);
+  const ly = y0 + (last % 7) * (cell + gap);
+  const total = data.github?.contributions ?? days.reduce((s, x) => s + x[1], 0);
+  const legendX = W - 40 - (5 * (cell + gap)) - 44;
+
+  return d.render({
+    height: H,
+    title: `${total} contributions in the last year`,
+    body: `<rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="18" fill="${c.subtle}" stroke="${c.border}"/>
+<text x="40" y="50" class="s" font-size="19" font-weight="650" fill="${c.fg}">${d.t(`${total} contributions`)}<tspan font-weight="400" fill="${c.muted}">${d.t(' in the last year')}</tspan></text>
+<text x="${legendX - 10}" y="49" text-anchor="end" class="s" font-size="12" fill="${c.muted}">${d.t('Less')}</text>
+${c.heat.map((h, i) => `<rect x="${legendX + i * (cell + gap)}" y="36" width="${cell}" height="${cell}" rx="4" fill="${h}"/>`).join('')}
+<text x="${legendX + 5 * (cell + gap) + 6}" y="49" class="s" font-size="12" fill="${c.muted}">${d.t('More')}</text>
+${monthLabels}
+${['Mon', 'Wed', 'Fri'].map((t, i) => `<text x="40" y="${y0 + (1 + i * 2) * (cell + gap) + 12}" class="s" font-size="12" fill="${c.muted}">${d.t(t)}</text>`).join('')}
+${rects}
+<rect x="${lx - 3}" y="${ly - 3}" width="${cell + 6}" height="${cell + 6}" rx="6" fill="none" stroke="${c.green}" stroke-width="1.5" class="pulse"/>`,
+    css: `@keyframes hc{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}.hc{transform-box:fill-box;transform-origin:center;animation:hc .45s ${EASE} both}\n${css.join('')}`
+  });
+};
+
+// Section heading, GitHub h2 style: icon, title, hairline underneath.
+const heading = async (theme, icon, text, hint) => {
+  const d = new Doc(theme);
+  const c = d.c;
+  const H = 82;
   return d.render({
     height: H,
     title: text,
-    body: `<g class="rise">
-  <text x="4" y="112" class="d" font-weight="800" font-size="96" letter-spacing="-4" fill="${c.text}">${d.t('display', text)}${count != null ? `<tspan class="m" dx="14" dy="-58" font-weight="400" font-size="20" letter-spacing="0" fill="${c.ink}">${d.t('mono', `(${count})`)}</tspan>` : ''}</text>
+    body: `<defs>${gradientDef(d, 'g', { x2: 44 })}</defs>
+<g class="up">
+  <rect x=".75" y="20.75" width="38.5" height="38.5" rx="10" fill="none" stroke="url(#g)" stroke-width="1.5"/>
+  ${ICON[icon](12, 32, c.fg)}
+  <text x="56" y="50" class="s" font-size="28" font-weight="700" font-stretch="110%" letter-spacing="-.4" fill="${c.fg}">${d.t(text)}</text>
+  ${hint ? `<text x="${W}" y="48" text-anchor="end" class="m" font-size="12" fill="${c.muted}">${d.m(hint)}</text>` : ''}
 </g>
-<line x1="0" y1="${H - 1}" x2="${W}" y2="${H - 1}" stroke="${c.line2}"/>`
+<line x1="0" y1="${H - 1}" x2="${W}" y2="${H - 1}" stroke="${c.borderMuted}"/>`
   });
 };
 
-// One clickable row (project or post).
-const row = async (theme, { index, lead, title, sub, right, status, arrow = true }) => {
+// Pinned-repo card with live language / stars / forks.
+const pinCard = async (theme, p, repo, index) => {
   const d = new Doc(theme);
   const c = d.c;
-  const H = 124;
-  const titleX = 92;
-  const maxTitle = 820;
-  const tSize = 50;
-  const est = measure('display', tSize, title) * 0.95;
-  const fit = est > maxTitle ? `textLength="${maxTitle}" lengthAdjust="spacingAndGlyphs"` : '';
-  const chipW = status ? measure('mono', 11, status.toUpperCase()) + 22 : 0;
+  const H = 172;
+  const w = CARD_W;
+  const hue = [c.link, c.purple, c.pink, c.green][index % 4];
+  const title = p.title;
+  const lang = repo?.language;
+  const desc = wrap(15.5, p.what, w - 56, 2);
+  const pill = p.status ? p.status : (repo ? 'Public' : 'Private');
+  const pillW = measure('mono', 11, pill) + 22;
+  let fx = 24;
+  const foot = [];
+  if (lang) {
+    foot.push(`<circle cx="${fx + 6}" cy="${H - 31}" r="6" fill="${LANG_COLORS[lang] || c.muted}"/><text x="${fx + 18}" y="${H - 26}" class="s" font-size="13.5" fill="${c.muted}">${d.t(lang)}</text>`);
+    fx += 28 + measure('sans', 13.5, lang);
+  }
+  // Like GitHub's pinned cards: stars/forks only when there are some.
+  if (repo?.stars) {
+    foot.push(`${ICON.star(fx, H - 40, c.muted)}<text x="${fx + 21}" y="${H - 26}" class="s" font-size="13.5" fill="${c.muted}">${d.t(String(repo.stars))}</text>`);
+    fx += 42 + measure('sans', 13.5, String(repo.stars));
+  }
+  if (repo?.forks) {
+    foot.push(`${ICON.fork(fx, H - 40, c.muted)}<text x="${fx + 21}" y="${H - 26}" class="s" font-size="13.5" fill="${c.muted}">${d.t(String(repo.forks))}</text>`);
+    fx += 42 + measure('sans', 13.5, String(repo.forks));
+  }
+  if (!lang && p.stack?.length) {
+    foot.push(`<text x="${fx}" y="${H - 26}" class="s" font-size="13.5" fill="${c.muted}">${d.t(p.stack.slice(0, 3).join(' · '))}</text>`);
+  }
+  const live = p.url ? `<text x="${w - 46}" y="${H - 26}" text-anchor="end" class="m" font-size="12" fill="${c.link}">${d.m('live')}</text>${ICON.arrow(w - 42, H - 40, c.link)}` : '';
+
+  return d.render({
+    width: w,
+    height: H,
+    title: `${title}: ${p.what}.${lang ? ` ${lang}.` : ''}${repo ? ` ${repo.stars} stars, ${repo.forks} forks.` : ''}`,
+    body: `<defs><clipPath id="cc"><rect width="${w}" height="${H}" rx="16"/></clipPath>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="40"/></filter></defs>
+<rect width="${w}" height="${H}" rx="16" fill="${c.subtle}"/>
+<g clip-path="url(#cc)" filter="url(#soft)" opacity="${c.glow * 0.9}"><circle cx="${w - 40}" cy="10" r="90" fill="${hue}"><animate attributeName="r" values="80;105;80" dur="${8 + index}s" repeatCount="indefinite"/></circle></g>
+<rect x=".5" y=".5" width="${w - 1}" height="${H - 1}" rx="16" fill="none" stroke="${c.border}"/>
+<g class="up" ${delay(index * 70)}>
+  ${ICON.repo(22, 25, c.muted)}
+  <text x="48" y="39" class="s" font-size="19" font-weight="650" fill="${c.link}" ${fit('sans', 19, title, w - 120 - pillW)}>${d.t(title)}</text>
+  <rect x="${w - 24 - pillW + 0.5}" y="22.5" width="${pillW}" height="24" rx="12" fill="${p.status ? hue : 'none'}" fill-opacity="${p.status ? 0.16 : 0}" stroke="${p.status ? hue : c.border}"/>
+  <text x="${w - 24 - pillW / 2}" y="38.5" text-anchor="middle" class="m" font-size="11" fill="${p.status ? hue : c.muted}">${d.m(pill)}</text>
+  ${desc.map((ln, i) => `<text x="24" y="${80 + i * 23}" class="s" font-size="15.5" fill="${c.fg2}">${d.t(ln)}</text>`).join('')}
+  ${foot.join('')}
+  ${live}
+</g>`
+  });
+};
+
+// One post as a commit in `git log --graph`.
+const commitRow = async (theme, post, index, count) => {
+  const d = new Doc(theme);
+  const c = d.c;
+  const H = 84;
+  const head = index === 0;
+  const sha = shortSha(post.externalUrl);
+  const when = ago(post.createdAt);
+  const tags = (post.tags || []).slice(0, 2);
+  const tagHues = [c.purple, c.link, c.pink];
+  let tx = W - 24 - measure('mono', 12, when) - 18;
+  const pills = tags.map((t, i) => {
+    const tw = measure('sans', 12.5, t) + 22;
+    tx -= tw + 8;
+    const hue = tagHues[i % tagHues.length];
+    return `<rect x="${tx.toFixed(1)}" y="${H / 2 - 12}" width="${tw.toFixed(1)}" height="24" rx="12" fill="${hue}" fill-opacity=".14" stroke="${hue}" stroke-opacity=".5"/><text x="${(tx + tw / 2).toFixed(1)}" y="${H / 2 + 4.5}" text-anchor="middle" class="s" font-size="12.5" font-weight="600" fill="${hue}">${d.t(t)}</text>`;
+  }).join('');
+  const titleX = head ? 252 : 150;
+  const titleMax = tx - titleX - 20;
   return d.render({
     height: H,
-    title: `${title}. ${sub}`,
-    body: `<g class="rise" ${delay(index * 80)}>
-  <text x="6" y="66" class="m" font-size="13" fill="${c.muted}">${d.t('mono', lead)}</text>
-  <text x="${titleX}" y="70" class="d" font-weight="600" font-size="${tSize}" letter-spacing="-1.6" fill="${c.text}" ${fit}>${d.t('display', title, 600)}</text>
-  <text x="${titleX}" y="102" class="b" font-size="17" fill="${c.muted}">${d.t('body', wrap('body', 17, sub, 900, 1)[0] || '')}</text>
-  ${status ? `<rect x="${W - 76 - chipW}" y="${H / 2 - 13}" width="${chipW}" height="26" rx="13" fill="${c.accent}"/><text x="${W - 76 - chipW / 2}" y="${H / 2 + 4}" text-anchor="middle" class="m" font-size="11" letter-spacing="1" fill="${c.onAccent}">${d.t('mono', status.toUpperCase())}</text>`
-    : `<text x="${W - 80}" y="${H / 2 + 4}" text-anchor="end" class="m" font-size="12" letter-spacing="1.2" fill="${c.text2}">${d.t('mono', right.toUpperCase())}</text>`}
-  ${arrow ? `<circle cx="${W - 28}" cy="${H / 2}" r="21.5" fill="none" stroke="${c.line2}"/>
-  <path d="M${W - 34} ${H / 2 + 6}l12-12m-9 0h9v9" fill="none" stroke="${c.text}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="nudge"/>` : ''}
+    title: `${post.title}, published ${when}${post.readTime ? `, ${post.readTime}` : ''}.`,
+    body: `<line x1="36" y1="${index === 0 ? H / 2 : 0}" x2="36" y2="${index === count - 1 ? H / 2 : H}" stroke="${c.border}" stroke-width="2"/>
+<g class="up" ${delay(index * 110)}>
+  <circle cx="36" cy="${H / 2}" r="8" fill="${head ? c.green : c.canvas}" stroke="${head ? c.green : c.link}" stroke-width="2.5"/>
+  ${head ? `<circle cx="36" cy="${H / 2}" r="13" fill="none" stroke="${c.green}" stroke-opacity=".5" class="pulse"/>` : ''}
+  <text x="66" y="${H / 2 + 5}" class="m" font-size="13" fill="${c.link}">${d.m(sha)}</text>
+  ${head ? `<rect x="140.5" y="${H / 2 - 12.5}" width="100" height="25" rx="12.5" fill="none" stroke="${c.green}"/><text x="190.5" y="${H / 2 + 4.5}" text-anchor="middle" class="m" font-size="11" fill="${c.green}">${d.m('HEAD → main')}</text>` : ''}
+  <text x="${titleX}" y="${H / 2 + 7}" class="s" font-size="19.5" font-weight="600" fill="${c.fg}" ${fit('sans', 19.5, post.title, titleMax)}>${d.t(post.title)}</text>
+  ${pills}
+  <text x="${W - 24}" y="${H / 2 + 5}" text-anchor="end" class="m" font-size="12" fill="${c.muted}">${d.m(when)}</text>
 </g>
-<line x1="0" y1="${H - 1}" x2="${W}" y2="${H - 1}" stroke="${c.line2}"/>`,
-    css: `@keyframes nudge{0%,80%,100%{transform:none}88%{transform:translate(3px,-3px)}}.nudge{animation:nudge 4s ${EASE} ${1200 + index * 300}ms infinite}`
+<line x1="64" y1="${H - 0.5}" x2="${W}" y2="${H - 0.5}" stroke="${c.borderMuted}"/>`
   });
 };
 
 const footer = async (theme) => {
   const d = new Doc(theme);
   const c = d.c;
-  const H = 330;
-  const size = 168;
-  const tw = Math.round(measure('display', size, "LET'S TALK.") * 0.9);
+  const H = 300;
+  const line = "Let's build something together.";
   return d.render({
     height: H,
-    title: `Let's talk. Say hi at ${config.site}.`,
-    body: `<rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="28" fill="${c.accent}"/>
-<g class="rise">
-  <text x="48" y="196" textLength="${Math.min(tw, W - 96)}" lengthAdjust="spacingAndGlyphs" class="d" font-weight="800" font-size="${size}" fill="${c.onAccent}">${d.t('display', "LET'S TALK.")}</text>
+    title: `${line} Say hello at ${config.site}.`,
+    body: `<defs><clipPath id="card"><rect width="${W}" height="${H}" rx="22"/></clipPath>${gradientDef(d, 'g', { x2: W, slide: true })}</defs>
+<rect width="${W}" height="${H}" rx="22" fill="${c.subtle}"/>
+${orbs(d, 'card', W, H, [[160, 300, 220, c.purple, 120, -40, 18], [1050, 0, 220, c.link, -120, 60, 21], [620, 330, 160, c.pink, -90, -30, 15]])}
+<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="21" fill="none" stroke="url(#g)" stroke-width="2"/>
+<g class="up">
+  <text x="48" y="78" class="m" font-size="12" letter-spacing="1.4" fill="${c.muted}">${d.m('$ git commit -m "hello"')}</text>
+  <text x="46" y="148" class="s" font-size="58" font-weight="850" font-stretch="118%" letter-spacing="-1.6" fill="${c.fg}" ${fit('sans', 58, line, W - 96, 118)}>${d.t(line)}</text>
+  <text x="48" y="190" class="s" font-size="19" fill="${c.fg2}">${d.t('Questions, collaborations or just a hello: my inbox is open.')}</text>
 </g>
-<g class="rise" ${delay(200)}>
-  <text x="52" y="270" class="m" font-size="16" fill="${c.onAccent}">${d.t('mono', `Say hi at ${config.site.replace(/^https?:\/\//, '')}`)}</text>
-  <circle cx="${W - 84}" cy="262" r="32" fill="${c.onAccent}"/>
-  <path d="M${W - 95} 273l22-22m-16 0h16v16" fill="none" stroke="${c.accent}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="nudge"/>
-</g>`,
-    css: `@keyframes nudge{0%,80%,100%{transform:none}88%{transform:translate(4px,-4px)}}.nudge{animation:nudge 3s ${EASE} 1.2s infinite}`
+<g class="up" ${delay(200)}>
+  <rect x="48" y="220" width="196" height="46" rx="10" fill="${c.btn}"/>
+  <text x="146" y="249" text-anchor="middle" class="s" font-size="16" font-weight="650" fill="${c.onBtn}">${d.t('Say hello →')}</text>
+  <rect x="256.5" y="220.5" width="${Math.round(measure('mono', 13, config.site.replace(/^https?:\/\//, ''))) + 40}" height="45" rx="10" fill="${c.canvas}" fill-opacity=".5" stroke="${c.border}"/>
+  <text x="276" y="248" class="m" font-size="13" fill="${c.fg2}">${d.m(config.site.replace(/^https?:\/\//, ''))}</text>
+</g>`
   });
 };
 
@@ -508,8 +592,6 @@ const loadData = async () => {
         || list.find((e) => /present/i.test(e.period || ''));
       return cur ? { role: cur.role, company: cur.company, location: cur.location || '' } : null;
     },
-    now: async () => (await getJSON(`${api}/api/current-work`))
-      .map(({ title, description, status, link }) => ({ title, description, status, link })),
     badge: async () => {
       const a = await getJSON(`${api}/api/about`);
       return a?.badgeNumber ? { number: a.badgeNumber, text: a.badgeText } : null;
@@ -518,16 +600,41 @@ const loadData = async () => {
       .map(({ title, externalUrl, readTime, createdAt, tags }) => ({ title, externalUrl, readTime, createdAt, tags: (tags || []).slice(0, 3) })),
     github: async () => {
       const u = await getJSON(`https://api.github.com/users/${config.user}`, auth);
-      const out = { repos: u.public_repos, since: new Date(u.created_at).getFullYear() };
+      const repos = await getJSON(`https://api.github.com/users/${config.user}/repos?per_page=100&type=owner`, auth);
+      const own = repos.filter((r) => !r.fork);
+      const langCount = {};
+      const hidden = new Set(config.hideLanguages || []);
+      own.forEach((r) => { if (r.language && !hidden.has(r.language)) langCount[r.language] = (langCount[r.language] || 0) + 1; });
+      const out = {
+        repos: u.public_repos,
+        since: new Date(u.created_at).getFullYear(),
+        avatarUrl: u.avatar_url,
+        languages: Object.entries(langCount).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([name, count]) => ({ name, count })),
+        repoStats: Object.fromEntries(repos.map((r) => [r.name.toLowerCase(), { stars: r.stargazers_count, forks: r.forks_count, language: r.language }]))
+      };
       if (token) {
         const r = await fetch('https://api.github.com/graphql', {
           method: 'POST',
           headers: { ...auth, 'Content-Type': 'application/json', 'User-Agent': 'profile-builder' },
-          body: JSON.stringify({ query: 'query($u:String!){user(login:$u){contributionsCollection{contributionCalendar{totalContributions}}}}', variables: { u: config.user } }),
+          body: JSON.stringify({
+            query: 'query($u:String!){user(login:$u){contributionsCollection{contributionCalendar{totalContributions weeks{contributionDays{date contributionCount contributionLevel}}}}}}',
+            variables: { u: config.user }
+          }),
           signal: AbortSignal.timeout(20000)
         });
-        const j = await r.json();
-        out.contributions = j?.data?.user?.contributionsCollection?.contributionCalendar?.totalContributions;
+        const cal = (await r.json())?.data?.user?.contributionsCollection?.contributionCalendar;
+        if (cal) {
+          const LEVEL = { NONE: 0, FIRST_QUARTILE: 1, SECOND_QUARTILE: 2, THIRD_QUARTILE: 3, FOURTH_QUARTILE: 4 };
+          out.contributions = cal.totalContributions;
+          out.calendar = cal.weeks.flatMap((w) => w.contributionDays.map((day) => [day.date, day.contributionCount, LEVEL[day.contributionLevel] ?? 0]));
+          // Last 12 calendar months, oldest first, for the sparkline.
+          const byMonth = {};
+          out.calendar.forEach(([date, count]) => { byMonth[date.slice(0, 7)] = (byMonth[date.slice(0, 7)] || 0) + count; });
+          out.months = Object.keys(byMonth).sort().slice(-12).map((k) => byMonth[k]);
+        }
+      } else {
+        // Without a token keep the last good calendar (if any).
+        Object.assign(out, { contributions: prev.github?.contributions, calendar: prev.github?.calendar, months: prev.github?.months });
       }
       return out;
     }
@@ -545,42 +652,58 @@ const loadData = async () => {
   return data;
 };
 
+const fetchAvatar = async (url) => {
+  if (!url) return '';
+  try {
+    const r = await fetch(`${url}${url.includes('?') ? '&' : '?'}s=240`, { signal: AbortSignal.timeout(15000) });
+    const type = r.headers.get('content-type') || 'image/png';
+    return `data:${type};base64,${Buffer.from(await r.arrayBuffer()).toString('base64')}`;
+  } catch {
+    return '';
+  }
+};
+
 // ---------------------------------------------------------------- README
 
-const pic = (base, alt) =>
-  `<picture><source media="(prefers-color-scheme: dark)" srcset="assets/${base}-dark.svg"><img src="assets/${base}-light.svg" width="100%" alt="${esc(alt)}"></picture>`;
+const pic = (base, alt, width = '100%') =>
+  `<picture><source media="(prefers-color-scheme: dark)" srcset="assets/${base}-dark.svg"><img src="assets/${base}-light.svg" width="${width}" alt="${esc(alt)}"></picture>`;
 const linked = (href, inner) => (href ? `<a href="${esc(href)}">${inner}</a>` : inner);
 
-const readme = (data, projectRows, postRows) => `<!-- Generated by scripts/build.mjs from profile.config.mjs and live data. Edit those, not this file. -->
+const readme = (data, cards, commits) => {
+  const pairs = [];
+  for (let i = 0; i < cards.length; i += 2) {
+    pairs.push(cards.slice(i, i + 2).map(({ base, href, alt }) => linked(href, pic(base, alt, '49%'))).join(' '));
+  }
+  return `<!-- Generated by scripts/build.mjs from profile.config.mjs and live data. Edit those, not this file. -->
 <div align="center">
 
-${pic('hero', `${config.name}, ${config.role}. ${config.tagline}`)}
+${pic('hero', `${config.name} (@${config.user}). ${data.role ? `${data.role.role} at ${data.role.company}. ` : ''}Builds full-stack products with React, Node.js and MongoDB.`)}
 
-${pic('glance', `At a glance: ${data.role ? `${data.role.role} at ${data.role.company}, ` : ''}${data.badge?.number || '150+'} problems solved, ${data.github?.repos ?? ''} public repositories, current work and latest post.`)}
+${pic('insights', 'Insights: contributions, repositories, problems solved and top languages.')}
 
-${pic('title-work', 'Selected work')}
-${projectRows.map(({ base, href, alt }) => linked(href, pic(base, alt))).join('\n')}
+${pic('h-pinned', 'Pinned')}
 
-${pic('title-writing', 'Writing')}
-${postRows.map(({ base, href, alt }) => linked(href, pic(base, alt))).join('\n')}
+${pairs.join('\n\n')}
 
-<sub><a href="https://sahilxdev.hashnode.dev">All posts on Hashnode →</a></sub>
+${pic('h-activity', 'Contribution activity')}
 
-${pic('title-activity', 'Activity')}
+${pic('heatmap', `${data.github?.contributions ?? ''} contributions in the last year`)}
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/${config.user}/${config.user}/output/github-snake-dark.svg">
-  <img src="https://raw.githubusercontent.com/${config.user}/${config.user}/output/github-snake.svg" width="100%" alt="Contribution graph being eaten by a snake">
-</picture>
+${pic('h-writing', 'Writing')}
 
-${linked(`${config.site}/#contact`, pic('footer', `Let's talk. Say hi at ${config.site}.`))}
+${commits.map(({ base, href, alt }) => linked(href, pic(base, alt))).join('\n')}
+
+<sub><a href="https://sahilxdev.hashnode.dev">git log --all → read every post on Hashnode</a></sub>
+
+${linked(`${config.site}/#contact`, pic('footer', `Let's build something together. Say hello at ${config.site}.`))}
 
 ${config.links.map(([label, href]) => `<a href="${esc(href)}">${esc(label)}</a>`).join(' &nbsp;·&nbsp; ')}
 
-<sub>Updated ${new Date(data.updatedAt).toUTCString().replace(/:\d\d GMT$/, ' UTC')} from my portfolio's admin panel, Hashnode and GitHub.</sub>
+<sub>Synced ${new Date(data.updatedAt).toUTCString().replace(/:\d\d GMT$/, ' UTC')} from my portfolio's admin panel, Hashnode and the GitHub API.</sub>
 
 </div>
 `;
+};
 
 // ---------------------------------------------------------------- main
 
@@ -595,46 +718,39 @@ const main = async () => {
   console.log('Fetching live data');
   const data = await loadData();
   await writeFile(DATA_FILE, `${JSON.stringify(data, null, 2)}\n`);
-  const avatar = (await readFile(path.join(ASSETS, 'avatar.jpg'))).toString('base64');
+  const avatar = await fetchAvatar(data.github?.avatarUrl);
+
+  // Start from a clean slate so renamed/removed images don't linger.
+  for (const f of await readdir(ASSETS)) if (f.endsWith('.svg')) await unlink(path.join(ASSETS, f));
 
   console.log('Rendering SVGs');
-  await both('hero', (t) => hero(t, data));
-  await both('glance', (t) => bento(t, data, avatar));
-  await both('title-work', (t) => sectionTitle(t, 'Selected work', config.projects.length));
-  await both('title-writing', (t) => sectionTitle(t, 'Writing'));
-  await both('title-activity', (t) => sectionTitle(t, 'Activity'));
+  await both('hero', (t) => hero(t, data, avatar));
+  await both('insights', (t) => insights(t, data));
+  await both('h-pinned', (t) => heading(t, 'pin', 'Pinned', `${config.projects.length} repositories`));
+  await both('h-activity', (t) => heading(t, 'graph', 'Contribution activity', 'live from the GitHub API'));
+  await both('h-writing', (t) => heading(t, 'commit', 'Writing', 'git log --oneline hashnode'));
+  await both('heatmap', (t) => heatmap(t, data));
   await both('footer', (t) => footer(t));
 
-  const projectRows = [];
+  const stats = data.github?.repoStats || {};
+  const cards = [];
   for (const [i, p] of config.projects.entries()) {
-    const base = `project-${i + 1}`;
-    await both(base, (t) => row(t, {
-      index: i,
-      lead: String(i + 1).padStart(2, '0'),
-      title: p.title,
-      sub: `${p.what} · ${p.stack.join(', ')}`,
-      right: p.url ? 'Live' : 'Repo',
-      status: p.status,
-      arrow: Boolean(p.url || p.repo)
-    }));
-    projectRows.push({ base, href: p.url || p.repo, alt: `${p.title}: ${p.what}. Built with ${p.stack.join(', ')}.` });
+    const base = `pin-${i + 1}`;
+    const repo = stats[repoName(p.repo).toLowerCase()];
+    await both(base, (t) => pinCard(t, p, repo, i));
+    cards.push({ base, href: p.url || p.repo, alt: `${p.title}: ${p.what}.` });
   }
 
-  const postRows = [];
-  for (const [i, post] of (data.posts || []).entries()) {
-    const base = `post-${i + 1}`;
-    await both(base, (t) => row(t, {
-      index: i,
-      lead: fmtDate(post.createdAt).slice(0, 6),
-      title: post.title,
-      sub: (post.tags || []).map((tag) => `#${tag}`).join('  '),
-      right: post.readTime || 'Read'
-    }));
-    postRows.push({ base, href: post.externalUrl, alt: `${post.title} (${post.readTime || 'blog post'})` });
+  const posts = data.posts || [];
+  const commits = [];
+  for (const [i, post] of posts.entries()) {
+    const base = `commit-${i + 1}`;
+    await both(base, (t) => commitRow(t, post, i, posts.length));
+    commits.push({ base, href: post.externalUrl, alt: `${post.title} (${post.readTime || 'blog post'})` });
   }
 
-  await writeFile(path.join(ROOT, 'README.md'), readme(data, projectRows, postRows));
-  console.log(`Done: README.md + ${2 * (6 + projectRows.length + postRows.length)} SVGs in assets/`);
+  await writeFile(path.join(ROOT, 'README.md'), readme(data, cards, commits));
+  console.log(`Done: README.md + ${2 * (7 + cards.length + commits.length)} SVGs in assets/`);
 };
 
 main().catch((e) => {

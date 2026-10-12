@@ -11,7 +11,6 @@ on:
     paths:
       - profile.config.mjs
       - scripts/**
-      - assets/avatar.jpg
 
 concurrency:
   group: refresh-profile

@@ -2,9 +2,10 @@
 // `node scripts/build.mjs` (or let the daily GitHub Action do it).
 //
 // Live data, refreshed on every build:
-//   - role, "right now" items, problem count  <- portfolio admin API
+//   - role, problem count                       <- portfolio admin API
 //   - latest posts                              <- portfolio blog API (synced from Hashnode)
-//   - public repos / contributions              <- GitHub API
+//   - avatar, repos, stars/forks, languages,
+//     contribution calendar                     <- GitHub API (calendar needs GITHUB_TOKEN)
 // If a source is down, the build reuses the last good values from assets/data.json.
 
 export default {
@@ -88,5 +89,8 @@ export default {
     }
   ],
 
-  postsToShow: 3
+  postsToShow: 3,
+
+  // Left out of the language bar (it counts each repo's main language).
+  hideLanguages: ['Jupyter Notebook']
 };
