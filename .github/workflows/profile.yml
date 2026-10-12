@@ -6,11 +6,10 @@ on:
   schedule:
     - cron: "30 0 * * *" # daily, 06:00 IST
   workflow_dispatch:
+  # Every push, not just config/script changes: if a manual push ever lands
+  # stale or conflicted generated files, this rebuild replaces them.
   push:
     branches: [main]
-    paths:
-      - profile.config.mjs
-      - scripts/**
 
 concurrency:
   group: refresh-profile
@@ -24,6 +23,13 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Guard against merge-conflict markers
+        run: |
+          if grep -rlE '^(<<<<<<<|>>>>>>>) ' profile.config.mjs scripts; then
+            echo "::error::Conflict markers in source files above; resolve them and push again."
+            exit 1
+          fi
 
       - uses: actions/setup-node@v4
         with:
