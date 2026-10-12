@@ -16,11 +16,11 @@
 <clipPath id="av"><circle cx="112" cy="190" r="56"/></clipPath>
 <clipPath id="ghostclip"><rect x="451" y="384" height="40" width="0"><animate attributeName="width" values="0;47;95;142;189;237;284;331;379;426;0;0" keyTimes="0;0.12;0.15;0.18;0.21;0.24;0.27;0.3;0.33;0.36;0.48;1" dur="10s" repeatCount="indefinite" calcMode="discrete"/></rect></clipPath>
 <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="0" spreadMethod="repeat">
-  <stop offset="0" stop-color="#0969da"/><stop offset=".33" stop-color="#8250df"/><stop offset=".66" stop-color="#bf3989"/><stop offset="1" stop-color="#0969da"/>
+  <stop offset="0" stop-color="#1a7f37"/><stop offset=".33" stop-color="#0f7f71"/><stop offset=".66" stop-color="#0969da"/><stop offset="1" stop-color="#1a7f37"/>
   <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="600 0" dur="9s" repeatCount="indefinite"/>
 </linearGradient>
 <linearGradient id="ring" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="140" y2="0" spreadMethod="repeat">
-  <stop offset="0" stop-color="#0969da"/><stop offset=".33" stop-color="#8250df"/><stop offset=".66" stop-color="#bf3989"/><stop offset="1" stop-color="#0969da"/>
+  <stop offset="0" stop-color="#1a7f37"/><stop offset=".33" stop-color="#0f7f71"/><stop offset=".66" stop-color="#0969da"/><stop offset="1" stop-color="#1a7f37"/>
   
 </linearGradient>
 <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#d1d9e0" stroke-width="1"/></pattern>
@@ -29,10 +29,10 @@
 </defs>
 <rect width="1200" height="470" rx="22" fill="#f6f8fa"/>
 <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="70"/></filter>
-<g clip-path="url(#card)" filter="url(#soft)" opacity="0.16">
-<circle cx="980" cy="60" r="210" fill="#8250df"><animateTransform attributeName="transform" type="translate" values="0 0;-120 60;0 0" dur="19s" repeatCount="indefinite"/></circle>
+<g clip-path="url(#card)" filter="url(#soft)" opacity="0.1">
+<circle cx="980" cy="60" r="210" fill="#0f7f71"><animateTransform attributeName="transform" type="translate" values="0 0;-120 60;0 0" dur="19s" repeatCount="indefinite"/></circle>
 <circle cx="760" cy="380" r="180" fill="#0969da"><animateTransform attributeName="transform" type="translate" values="0 0;140 -40;0 0" dur="23s" repeatCount="indefinite"/></circle>
-<circle cx="1160" cy="360" r="160" fill="#bf3989"><animateTransform attributeName="transform" type="translate" values="0 0;-80 -70;0 0" dur="17s" repeatCount="indefinite"/></circle>
+<circle cx="1160" cy="360" r="160" fill="#1a7f37"><animateTransform attributeName="transform" type="translate" values="0 0;-80 -70;0 0" dur="17s" repeatCount="indefinite"/></circle>
 </g>
 <rect width="1200" height="470" fill="url(#grid)" mask="url(#gridmask)" opacity=".55" clip-path="url(#card)"/>
 <rect x=".5" y=".5" width="1199" height="469" rx="22" fill="none" stroke="#d1d9e0"/>
@@ -72,9 +72,9 @@
   <!-- ghost suggestion (muted), revealed chunk by chunk -->
   <g clip-path="url(#ghostclip)"><text x="112" y="410" class="m" font-size="19" font-style="italic" fill="#59636e" textLength="765" lengthAdjust="spacing">focus: &quot;full-stack products with React, Node.js and MongoDB&quot;,</text></g>
   <!-- typed prefix -->
-  <text x="112" y="410" class="m" font-size="19" textLength="339" lengthAdjust="spacing"><tspan fill="#cf222e">focus</tspan><tspan fill="#393f46">: </tspan><tspan fill="#0a3069">&quot;full-stack products</tspan></text>
+  <text x="112" y="410" class="m" font-size="19" textLength="339" lengthAdjust="spacing"><tspan fill="#0550ae">focus</tspan><tspan fill="#393f46">: </tspan><tspan fill="#0a3069">&quot;full-stack products</tspan></text>
   <!-- accepted line -->
-  <text x="112" y="410" class="m" font-size="19" textLength="765" lengthAdjust="spacing" opacity="0"><tspan fill="#cf222e">focus</tspan><tspan fill="#393f46">: </tspan><tspan fill="#0a3069">&quot;full-stack products</tspan><tspan fill="#0a3069"> with React, Node.js and MongoDB&quot;,</tspan>
+  <text x="112" y="410" class="m" font-size="19" textLength="765" lengthAdjust="spacing" opacity="0"><tspan fill="#0550ae">focus</tspan><tspan fill="#393f46">: </tspan><tspan fill="#0a3069">&quot;full-stack products</tspan><tspan fill="#0a3069"> with React, Node.js and MongoDB&quot;,</tspan>
     <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.46;.49;.94;1" dur="10s" repeatCount="indefinite"/></text>
   <!-- Tab hint -->
   <g opacity="0">

@@ -12,7 +12,7 @@
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 <defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="44" y2="0" spreadMethod="repeat">
-  <stop offset="0" stop-color="#0969da"/><stop offset=".33" stop-color="#8250df"/><stop offset=".66" stop-color="#bf3989"/><stop offset="1" stop-color="#0969da"/>
+  <stop offset="0" stop-color="#1a7f37"/><stop offset=".33" stop-color="#0f7f71"/><stop offset=".66" stop-color="#0969da"/><stop offset="1" stop-color="#1a7f37"/>
   
 </linearGradient></defs>
 <g class="up">

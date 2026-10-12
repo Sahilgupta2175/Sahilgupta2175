@@ -14,13 +14,13 @@
 <defs><clipPath id="cc"><rect width="590" height="172" rx="16"/></clipPath>
 <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="40"/></filter></defs>
 <rect width="590" height="172" rx="16" fill="#151b23"/>
-<g clip-path="url(#cc)" filter="url(#soft)" opacity="0.28800000000000003"><circle cx="550" cy="10" r="90" fill="#4493f8"><animate attributeName="r" values="80;105;80" dur="8s" repeatCount="indefinite"/></circle></g>
+<g clip-path="url(#cc)" filter="url(#soft)" opacity="0.18000000000000002"><circle cx="550" cy="10" r="90" fill="#2fbfa6"><animate attributeName="r" values="80;105;80" dur="8s" repeatCount="indefinite"/></circle></g>
 <rect x=".5" y=".5" width="589" height="171" rx="16" fill="none" stroke="#3d444d"/>
 <g class="up" style="animation-delay:0ms">
   <g transform="translate(22 25)" fill="none" stroke="#9198a1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h9.5v11H4.5A1.5 1.5 0 0 1 3 12V2.5Z"/><path d="M3 11.5A1.5 1.5 0 0 1 4.5 10h8"/><path d="M6 13.5v2l1.25-.9 1.25.9v-2"/></g>
   <text x="48" y="39" class="s" font-size="19" font-weight="650" fill="#4493f8" >DriveEase</text>
-  <rect x="486.41999999999996" y="22.5" width="80.08000000000001" height="24" rx="12" fill="#4493f8" fill-opacity="0.16" stroke="#4493f8"/>
-  <text x="525.96" y="38.5" text-anchor="middle" class="m" font-size="11" fill="#4493f8">Building</text>
+  <rect x="486.41999999999996" y="22.5" width="80.08000000000001" height="24" rx="12" fill="#2fbfa6" fill-opacity="0.16" stroke="#2fbfa6"/>
+  <text x="525.96" y="38.5" text-anchor="middle" class="m" font-size="11" fill="#2fbfa6">Building</text>
   <text x="24" y="80" class="s" font-size="15.5" fill="#d1d7e0">Peer-to-peer vehicle rental marketplace for Indian cities</text>
   <text x="24" y="146" class="s" font-size="13.5" fill="#9198a1">Next.js · Razorpay · PostHog</text>
   

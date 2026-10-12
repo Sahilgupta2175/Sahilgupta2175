@@ -5,7 +5,7 @@
 // Node 18+, no dependencies. Runs daily in .github/workflows/profile.yml.
 //
 // Design: native to GitHub rather than a copy of the portfolio. GitHub's own
-// typeface (Mona Sans, variable width), Primer colours, Universe-style glow,
+// typeface (Mona Sans, variable width), Primer colours, a soft green-blue glow,
 // and GitHub metaphors: a README file header, a Copilot ghost-text
 // completion, pinned-repo cards with live stars/forks, a contribution
 // heatmap redrawn from the real calendar, and posts as a `git log`.
@@ -30,15 +30,17 @@ const CARD_W = 590; // pinned cards, two per row
 const THEMES = {
   dark: {
     canvas: '#0d1117', subtle: '#151b23', inset: '#010409', border: '#3d444d', borderMuted: '#262c36',
-    fg: '#f0f6fc', fg2: '#d1d7e0', muted: '#9198a1', link: '#4493f8', green: '#3fb950', purple: '#ab7df8',
-    pink: '#f778ba', string: '#a5d6ff', keyword: '#ff7b72', btn: '#238636', onBtn: '#ffffff',
-    heat: ['#151b23', '#033a16', '#196c2e', '#2ea043', '#56d364'], glow: 0.32
+    fg: '#f0f6fc', fg2: '#d1d7e0', muted: '#9198a1', link: '#4493f8', green: '#3fb950', teal: '#2fbfa6',
+    gradA: '#56d364', gradB: '#2fbfa6', gradC: '#58a6ff', key: '#79c0ff', string: '#a5d6ff',
+    btn: '#238636', onBtn: '#ffffff', topic: '#4493f8',
+    heat: ['#151b23', '#033a16', '#196c2e', '#2ea043', '#56d364'], glow: 0.2
   },
   light: {
     canvas: '#ffffff', subtle: '#f6f8fa', inset: '#f6f8fa', border: '#d1d9e0', borderMuted: '#e4e8ec',
-    fg: '#1f2328', fg2: '#393f46', muted: '#59636e', link: '#0969da', green: '#1a7f37', purple: '#8250df',
-    pink: '#bf3989', string: '#0a3069', keyword: '#cf222e', btn: '#1f883d', onBtn: '#ffffff',
-    heat: ['#eff2f5', '#aceebb', '#4ac26b', '#2da44e', '#116329'], glow: 0.16
+    fg: '#1f2328', fg2: '#393f46', muted: '#59636e', link: '#0969da', green: '#1a7f37', teal: '#0f7f71',
+    gradA: '#1a7f37', gradB: '#0f7f71', gradC: '#0969da', key: '#0550ae', string: '#0a3069',
+    btn: '#1f883d', onBtn: '#ffffff', topic: '#0969da',
+    heat: ['#eff2f5', '#aceebb', '#4ac26b', '#2da44e', '#116329'], glow: 0.1
   }
 };
 
@@ -177,9 +179,10 @@ ${body}
 
 const delay = (ms) => `style="animation-delay:${ms}ms"`;
 
-// Blue → purple → pink, the Copilot/Universe gradient. Repeats so it can slide.
+// GitHub green → teal → blue: one analogous family that sits with the green
+// contribution graph and the green button. Repeats so it can slide.
 const gradientDef = (d, id, { x2 = 600, slide = false } = {}) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="${x2}" y2="0" spreadMethod="repeat">
-  <stop offset="0" stop-color="${d.c.link}"/><stop offset=".33" stop-color="${d.c.purple}"/><stop offset=".66" stop-color="${d.c.pink}"/><stop offset="1" stop-color="${d.c.link}"/>
+  <stop offset="0" stop-color="${d.c.gradA}"/><stop offset=".33" stop-color="${d.c.gradB}"/><stop offset=".66" stop-color="${d.c.gradC}"/><stop offset="1" stop-color="${d.c.gradA}"/>
   ${slide ? `<animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="${x2} 0" dur="9s" repeatCount="indefinite"/>` : ''}
 </linearGradient>`;
 
@@ -235,7 +238,7 @@ const hero = async (theme, data, avatar) => {
   // Tab, then disappears at 48% when the accepted line takes its place.
   const widths = [0, ...Array.from({ length: steps }, (_, i) => Math.round((ghostW * (i + 1)) / steps)), 0, 0];
   const times = [0, ...Array.from({ length: steps }, (_, i) => +(0.12 + (0.24 * i) / (steps - 1)).toFixed(3)), 0.48, 1];
-  const tokens = (k, s, rest) => `<tspan fill="${c.keyword}">${d.m(k)}</tspan><tspan fill="${c.fg2}">${d.m(': ')}</tspan><tspan fill="${c.string}">${d.m(s)}</tspan>${rest ? `<tspan fill="${c.string}">${d.m(rest)}</tspan>` : ''}`;
+  const tokens = (k, s, rest) => `<tspan fill="${c.key}">${d.m(k)}</tspan><tspan fill="${c.fg2}">${d.m(': ')}</tspan><tspan fill="${c.string}">${d.m(s)}</tspan>${rest ? `<tspan fill="${c.string}">${d.m(rest)}</tspan>` : ''}`;
 
   const name = config.name;
   const nameSize = 92;
@@ -252,7 +255,7 @@ ${gradientDef(d, 'ring', { x2: 140 })}
 <mask id="gridmask"><rect width="${W}" height="${H}" fill="url(#fade)"/></mask>
 </defs>
 <rect width="${W}" height="${H}" rx="22" fill="${c.subtle}"/>
-${orbs(d, 'card', W, H, [[980, 60, 210, c.purple, -120, 60, 19], [760, 380, 180, c.link, 140, -40, 23], [1160, 360, 160, c.pink, -80, -70, 17]])}
+${orbs(d, 'card', W, H, [[980, 60, 210, c.teal, -120, 60, 19], [760, 380, 180, c.gradC, 140, -40, 23], [1160, 360, 160, c.green, -80, -70, 17]])}
 <rect width="${W}" height="${H}" fill="url(#grid)" mask="url(#gridmask)" opacity=".55" clip-path="url(#card)"/>
 <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="22" fill="none" stroke="${c.border}"/>
 
@@ -339,7 +342,7 @@ const insights = async (theme, data) => {
     const pts = months.map((v, i) => [x0 + ((x1 - x0) * i) / (months.length - 1), 196 - (v / max) * 30]);
     const dPath = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
     spark = `<path d="${dPath}" fill="none" stroke="url(#g)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" class="draw"/>
-  <circle cx="${pts[pts.length - 1][0].toFixed(1)}" cy="${pts[pts.length - 1][1].toFixed(1)}" r="4" fill="${c.pink}" class="pulse"/>`;
+  <circle cx="${pts[pts.length - 1][0].toFixed(1)}" cy="${pts[pts.length - 1][1].toFixed(1)}" r="4" fill="${c.gradC}" class="pulse"/>`;
   }
   cells.push(cell(0, 'Contributions · 12 mo', gh.contributions ?? '—', 'on GitHub this year', spark));
   cells.push(cell(1, 'Public repositories', gh.repos ?? '—', `building in public since ${gh.since || 2022}`));
@@ -461,7 +464,7 @@ const pinCard = async (theme, p, repo, index) => {
   const c = d.c;
   const H = 172;
   const w = CARD_W;
-  const hue = [c.link, c.purple, c.pink, c.green][index % 4];
+  const hue = c.teal;
   const title = p.title;
   const lang = repo?.language;
   const desc = wrap(15.5, p.what, w - 56, 2);
@@ -517,13 +520,12 @@ const commitRow = async (theme, post, index, count) => {
   const sha = shortSha(post.externalUrl);
   const when = ago(post.createdAt);
   const tags = (post.tags || []).slice(0, 2);
-  const tagHues = [c.purple, c.link, c.pink];
   let tx = W - 24 - measure('mono', 12, when) - 18;
   const pills = tags.map((t, i) => {
     const tw = measure('sans', 12.5, t) + 22;
     tx -= tw + 8;
-    const hue = tagHues[i % tagHues.length];
-    return `<rect x="${tx.toFixed(1)}" y="${H / 2 - 12}" width="${tw.toFixed(1)}" height="24" rx="12" fill="${hue}" fill-opacity=".14" stroke="${hue}" stroke-opacity=".5"/><text x="${(tx + tw / 2).toFixed(1)}" y="${H / 2 + 4.5}" text-anchor="middle" class="s" font-size="12.5" font-weight="600" fill="${hue}">${d.t(t)}</text>`;
+    // GitHub topic style: one blue, tinted background, no border.
+    return `<rect x="${tx.toFixed(1)}" y="${H / 2 - 12}" width="${tw.toFixed(1)}" height="24" rx="12" fill="${c.topic}" fill-opacity=".12"/><text x="${(tx + tw / 2).toFixed(1)}" y="${H / 2 + 4.5}" text-anchor="middle" class="s" font-size="12.5" font-weight="600" fill="${c.topic}">${d.t(t)}</text>`;
   }).join('');
   const titleX = head ? 252 : 150;
   const titleMax = tx - titleX - 20;
@@ -554,7 +556,7 @@ const footer = async (theme) => {
     title: `${line} Say hello at ${config.site}.`,
     body: `<defs><clipPath id="card"><rect width="${W}" height="${H}" rx="22"/></clipPath>${gradientDef(d, 'g', { x2: W, slide: true })}</defs>
 <rect width="${W}" height="${H}" rx="22" fill="${c.subtle}"/>
-${orbs(d, 'card', W, H, [[160, 300, 220, c.purple, 120, -40, 18], [1050, 0, 220, c.link, -120, 60, 21], [620, 330, 160, c.pink, -90, -30, 15]])}
+${orbs(d, 'card', W, H, [[160, 300, 220, c.green, 120, -40, 18], [1050, 0, 220, c.gradC, -120, 60, 21], [620, 330, 160, c.teal, -90, -30, 15]])}
 <rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="21" fill="none" stroke="url(#g)" stroke-width="2"/>
 <g class="up">
   <text x="48" y="78" class="m" font-size="12" letter-spacing="1.4" fill="${c.muted}">${d.m('$ git commit -m "hello"')}</text>

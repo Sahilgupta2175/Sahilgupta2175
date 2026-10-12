@@ -12,15 +12,15 @@
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 <defs><clipPath id="card"><rect width="1200" height="300" rx="22"/></clipPath><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0" spreadMethod="repeat">
-  <stop offset="0" stop-color="#4493f8"/><stop offset=".33" stop-color="#ab7df8"/><stop offset=".66" stop-color="#f778ba"/><stop offset="1" stop-color="#4493f8"/>
+  <stop offset="0" stop-color="#56d364"/><stop offset=".33" stop-color="#2fbfa6"/><stop offset=".66" stop-color="#58a6ff"/><stop offset="1" stop-color="#56d364"/>
   <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="1200 0" dur="9s" repeatCount="indefinite"/>
 </linearGradient></defs>
 <rect width="1200" height="300" rx="22" fill="#151b23"/>
 <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="70"/></filter>
-<g clip-path="url(#card)" filter="url(#soft)" opacity="0.32">
-<circle cx="160" cy="300" r="220" fill="#ab7df8"><animateTransform attributeName="transform" type="translate" values="0 0;120 -40;0 0" dur="18s" repeatCount="indefinite"/></circle>
-<circle cx="1050" cy="0" r="220" fill="#4493f8"><animateTransform attributeName="transform" type="translate" values="0 0;-120 60;0 0" dur="21s" repeatCount="indefinite"/></circle>
-<circle cx="620" cy="330" r="160" fill="#f778ba"><animateTransform attributeName="transform" type="translate" values="0 0;-90 -30;0 0" dur="15s" repeatCount="indefinite"/></circle>
+<g clip-path="url(#card)" filter="url(#soft)" opacity="0.2">
+<circle cx="160" cy="300" r="220" fill="#3fb950"><animateTransform attributeName="transform" type="translate" values="0 0;120 -40;0 0" dur="18s" repeatCount="indefinite"/></circle>
+<circle cx="1050" cy="0" r="220" fill="#58a6ff"><animateTransform attributeName="transform" type="translate" values="0 0;-120 60;0 0" dur="21s" repeatCount="indefinite"/></circle>
+<circle cx="620" cy="330" r="160" fill="#2fbfa6"><animateTransform attributeName="transform" type="translate" values="0 0;-90 -30;0 0" dur="15s" repeatCount="indefinite"/></circle>
 </g>
 <rect x="1" y="1" width="1198" height="298" rx="21" fill="none" stroke="url(#g)" stroke-width="2"/>
 <g class="up">
