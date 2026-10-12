@@ -17,7 +17,7 @@
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/h-activity-dark.svg"><img src="assets/h-activity-light.svg" width="100%" alt="Contribution activity"></picture>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="assets/heatmap-dark.svg"><img src="assets/heatmap-light.svg" width="100%" alt="159 contributions in the last year"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/heatmap-dark.svg"><img src="assets/heatmap-light.svg" width="100%" alt="152 contributions in the last year"></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/h-writing-dark.svg"><img src="assets/h-writing-light.svg" width="100%" alt="Writing"></picture>
 
@@ -31,6 +31,6 @@
 
 <a href="https://sahilgupta.tech">sahilgupta.tech</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/sahil-gupta-35199620a/">LinkedIn</a> &nbsp;·&nbsp; <a href="https://sahilxdev.hashnode.dev">Hashnode</a> &nbsp;·&nbsp; <a href="https://peerlist.io/sahilgupta2175">Peerlist</a> &nbsp;·&nbsp; <a href="mailto:guptasahil2175@gmail.com">Email</a>
 
-<sub>Synced Mon, 12 Oct 2026 21:14 UTC from my portfolio's admin panel, Hashnode and the GitHub API.</sub>
+<sub>Synced Mon, 12 Oct 2026 21:15 UTC from my portfolio's admin panel, Hashnode and the GitHub API.</sub>
 
 </div>
