@@ -1,0 +1,59 @@
+{
+  "role": {
+    "role": "Programmer Analyst Trainee",
+    "company": "Cognizant",
+    "location": "Bangalore"
+  },
+  "now": [
+    {
+      "title": "Vehicle Rental Services v2.0",
+      "description": "Adding multi-tenant support and a real-time analytics dashboard.",
+      "status": "Building",
+      "link": ""
+    }
+  ],
+  "badge": {
+    "number": "150+",
+    "text": "Problems\nSolved"
+  },
+  "posts": [
+    {
+      "title": "JWT Authentication in Node.js Explained Simply",
+      "externalUrl": "https://sahilxdev.hashnode.dev/jwt-authentication-in-node-js-explained-simply",
+      "readTime": "7 min read",
+      "createdAt": "2026-10-09T05:22:44.000Z",
+      "tags": [
+        "Node.js",
+        "Express",
+        "JWT"
+      ]
+    },
+    {
+      "title": "Sessions vs JWT vs Cookies: How Does a Server Remember You?",
+      "externalUrl": "https://sahilxdev.hashnode.dev/sessions-vs-jwt-vs-cookies-authentication",
+      "readTime": "7 min read",
+      "createdAt": "2026-10-08T04:53:52.000Z",
+      "tags": [
+        "Node.js",
+        "Express.js",
+        "authentication"
+      ]
+    },
+    {
+      "title": "Where Do Uploaded Files Go? Storing and Serving Them in Express",
+      "externalUrl": "https://sahilxdev.hashnode.dev/store-and-serve-uploaded-files-express",
+      "readTime": "5 min read",
+      "createdAt": "2026-10-07T05:29:44.000Z",
+      "tags": [
+        "Node.js",
+        "Express.js",
+        "multer"
+      ]
+    }
+  ],
+  "github": {
+    "repos": 41,
+    "since": 2022
+  },
+  "updatedAt": "2026-10-12T20:59:41.271Z"
+}

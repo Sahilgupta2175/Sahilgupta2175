@@ -1,0 +1,45 @@
+name: Refresh profile
+
+# Rebuilds README.md and assets/*.svg from profile.config.mjs plus live data
+# (portfolio admin API, Hashnode posts via the portfolio, GitHub stats).
+on:
+  schedule:
+    - cron: "30 0 * * *" # daily, 06:00 IST
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - profile.config.mjs
+      - scripts/**
+      - assets/avatar.jpg
+
+concurrency:
+  group: refresh-profile
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build profile
+        run: node scripts/build.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Commits made with GITHUB_TOKEN don't trigger other workflows, so this
+      # can't loop.
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md assets
+          git diff --cached --quiet || (git commit -m "chore: refresh profile" && git push)

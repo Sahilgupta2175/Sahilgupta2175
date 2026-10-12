@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="150" viewBox="0 0 1200 150" role="img" aria-label="Activity">
+<title>Activity</title>
+<style>@font-face{font-family:'Bricolage Grotesque';font-weight:800;src:url(data:font/woff2;base64,d09GMgABAAAAAAWsABAAAAAACpwAAAVPAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhwbgj4ccgZgP1NUQVRWAGQRCAqFFIQjCxgAATYCJAMsBCAFhiAHIAwHG/0IyAQeiLb1bzYQGcCstdArIy8qOLjWxgq8DvgdQfzodP2etZbPXldDVkqnpvu7PpgPplIS9UJERGuhEnLHVLZoN3gRBb8sDSliUxGAnbml+A0CddagY50h/HEbRVShzJ2/1I2zp8nfR5VoCfURo727bajPL+YjikbseJUQU7HPvAqwQm4ObxHnTI4B8wXzd3ecTJITikm1Jq3Lk7+bdvRfI81fzL/NUfNj8wUw/xXbhDl6UoM1HxXm336JHjrZRgwCC3xYRcdSOlxIcUNaCKmfHIMqQg0tE5L8gvjJKi4MMpUCSkFWmaNwvQSqcsGlbPBM/C7oszbMMyiYs9ptULBk1gaDAvesl9e9eomhq65xlo729Lf0rNUbxJClxjAbqynLVQOdligBZR2w5CYTW6gS0+SKtOiapqji1+4fmeVeuprHMNihXjH6CyW14+K0fpR45SzTbODQCrko+TJxPEr/wPDOJNdva/V3CAWxzdfhF2VvziVR6RFErGoo2COSaIVWCakEFC4DiNC8ZDRWcjzxwc0Gs2ihEz9b2aHFRj+vmF+bj5mXmheYZ5inm6eC1+8nC4RpEscuWZLa5h0PWn8QpbvE3ta0hPo4aT3gf1RomjXbqrm0LOtY+1o9Tmt26Pb1AXFABtnvueDSG2+8URy4wRa46qpkz7XPyuDzD7P/puuuuy5DNsjNti22TR7hoCkQiUTEgWg0KoPhcL77klsesAXuu+ky9odflsEHb81ae1HotZDUpdYUiAhh88prH8zySiQ29t8vg/emcdVTcotcLzfKTU2BSGSs9+GwDEajhV5bKBSyBSIRIST7wzL44K1XCiGV/aFQKNQQeEUceFUGX2b/S3Mrf7P8dnnL9PHTD702pbpmytSa6tZj2b9edVtxYvJgsuPpFyLqssCUtIK23MLsNV9+ukjF+eGZ33145m0Xp8RfnDJ2V88DPdQ55vqK580vapk+s8g3b0lb6ezZDWOmLrn8rErj/IPpGWvOfau4NnP+HFfJo9NTg7k1uXPvWpfD9PjL45H2zd7m3leXKLvrfhIT7Ys2juw7tO/JgriCpLRrzv57Lnff5Lyz5bSEttNuvNmJ9d7SNY7FmVe7TjGa88pq55YWucs0T7p15vhVc13lk5dNcvm9715x56ai5aUpabteKbnr8sMzUn3jl82pWZ/B0LoyS5HLUlZuKS62oLjQAAu2bKG40AALtmyRDFAB/Kj8QgU3tVNdPbvk7KN3N8RN/d2qql/xAO86llzJ13/0fuOPZu3oNn2bdhQcGq7SmNVuc2z9FLN2tFff1gB/JpXTmac8h1OZgiFyqRC5TL/dfQ52ZRFWpZESPhwQkXOyxEcMvV1o3V7t+I1ObukqFVrsrPYp8RIEk4VfUHCKdkFluUjfq8ULOh6eECxMJFDopA63LTpGyVQWBHYqBAUbrqZYErtulgSJFTsldbCvLqefIXppoodKahjAzzy289eHaGI2/fTQipdOWvHTgZc2tnwB+1mRkjtpydlgMGx4J23hDv/Vw0ymnHKGaWHIg+FhytJwD2VOb/JRzgrms5TZ8dTibH4TPtpYwBBZfjrZMIOM0MYEWZaHaAj31X76MKikjAoqqGQKPtrxB6CvDLORCsqYRBnVVFNGK/31ViYyDh8VVDGJNiqZRDubARdnFm6Wspop8hyr2cdIjsOG+DBjVpQxeQ79DLAjr6o/G1TJnlyFgZuOPDuCppXs6KIWCM9ipH5RJ7mHMSitRfIN6pM7GKGZMnhDL+UzILmHzlqAWKtzlnsH5TSLKB0ztVWYF/Fm+4n3CfPIbdrJAAAA) format('woff2');}
+.d{font-family:'Bricolage Grotesque','Arial Black','Helvetica Neue',Arial,sans-serif}.b{font-family:'Hanken Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif}.m{font-family:'JetBrains Mono',SFMono-Regular,Menlo,Consolas,monospace}
+@keyframes rise{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:none}}
+.rise{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<g class="rise">
+  <text x="4" y="112" class="d" font-weight="800" font-size="96" letter-spacing="-4" fill="#0B0C09">Activity</text>
+</g>
+<line x1="0" y1="149" x2="1200" y2="149" stroke="#BDBBAF"/>
+</svg>

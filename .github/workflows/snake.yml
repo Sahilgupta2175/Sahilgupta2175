@@ -19,9 +19,10 @@ jobs:
         uses: Platane/snk/svg-only@v3
         with:
           github_user_name: Sahilgupta2175
+          # Lime palette to match the profile's v3 look.
           outputs: |
-            dist/github-snake.svg
-            dist/github-snake-dark.svg?palette=github-dark
+            dist/github-snake.svg?color_snake=#0B0C09&color_dots=#ebedf0,#e4f5c4,#c8f169,#8fae3c,#4f6128
+            dist/github-snake-dark.svg?palette=github-dark&color_snake=#C8F169&color_dots=#161b22,#2b3a12,#4f6128,#8fae3c,#c8f169
 
       - name: Publish Snake
         uses: crazy-max/ghaction-github-pages@v3.1.0

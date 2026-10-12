@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="150" viewBox="0 0 1200 150" role="img" aria-label="Writing">
+<title>Writing</title>
+<style>@font-face{font-family:'Bricolage Grotesque';font-weight:800;src:url(data:font/woff2;base64,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) format('woff2');}
+.d{font-family:'Bricolage Grotesque','Arial Black','Helvetica Neue',Arial,sans-serif}.b{font-family:'Hanken Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif}.m{font-family:'JetBrains Mono',SFMono-Regular,Menlo,Consolas,monospace}
+@keyframes rise{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:none}}
+.rise{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<g class="rise">
+  <text x="4" y="112" class="d" font-weight="800" font-size="96" letter-spacing="-4" fill="#EEEDE6">Writing</text>
+</g>
+<line x1="0" y1="149" x2="1200" y2="149" stroke="#363A2C"/>
+</svg>
