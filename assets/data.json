@@ -4,14 +4,6 @@
     "company": "Cognizant",
     "location": "Bangalore"
   },
-  "now": [
-    {
-      "title": "Vehicle Rental Services v2.0",
-      "description": "Adding multi-tenant support and a real-time analytics dashboard.",
-      "status": "Building",
-      "link": ""
-    }
-  ],
   "badge": {
     "number": "150+",
     "text": "Problems\nSolved"
@@ -280,11 +272,7 @@
         "language": "HTML"
       }
     },
-<<<<<<< HEAD
-    "contributions": 160,
-=======
     "contributions": 152,
->>>>>>> 4db6a8faa9cbf3af94b6bd0f744ae26b6f25a689
     "calendar": [
       [
         "2025-10-12",
@@ -2115,14 +2103,6 @@
         "2026-10-12",
         2,
         1
-<<<<<<< HEAD
-      ],
-      [
-        "2026-10-13",
-        8,
-        3
-=======
->>>>>>> 4db6a8faa9cbf3af94b6bd0f744ae26b6f25a689
       ]
     ],
     "months": [
@@ -2137,15 +2117,8 @@
       8,
       11,
       67,
-<<<<<<< HEAD
-      37
-    ]
-  },
-  "updatedAt": "2026-10-12T21:18:36.491Z"
-=======
       29
     ]
   },
-  "updatedAt": "2026-10-12T21:15:39.074Z"
->>>>>>> 4db6a8faa9cbf3af94b6bd0f744ae26b6f25a689
+  "updatedAt": "2026-10-12T21:21:00.376Z"
 }
