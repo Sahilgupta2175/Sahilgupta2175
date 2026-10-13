@@ -27,10 +27,44 @@ export default {
     ['Email', 'mailto:guptasahil2175@gmail.com']
   ],
 
-  stack: [
-    'JavaScript', 'React', 'Next.js', 'Redux', 'Tailwind CSS', 'Node.js', 'Express',
-    'MongoDB', 'MySQL', 'PostgreSQL', 'SQL', 'PL/SQL', 'Java', 'Git', 'Postman'
-  ],
+  // Tech stack section. `icon` is a Simple Icons slug (simpleicons.org, fetched
+  // at build time) or 'db' / 'code' for the built-in drawn icons; `color` is the
+  // brand colour (auto-adjusted per theme so it stays readable).
+  stack: {
+    Languages: [
+      { name: 'JavaScript', icon: 'javascript', color: '#F7DF1E' },
+      { name: 'Java', icon: 'openjdk', color: '#ED8B00' },
+      { name: 'SQL', icon: 'db', color: '#4479A1' },
+      { name: 'PL/SQL', icon: 'oracle', color: '#F80000' }
+    ],
+    Frontend: [
+      { name: 'React', icon: 'react', color: '#61DAFB' },
+      { name: 'Next.js', icon: 'nextdotjs', color: '#000000' },
+      { name: 'Redux', icon: 'redux', color: '#764ABC' },
+      { name: 'Tailwind CSS', icon: 'tailwindcss', color: '#06B6D4' },
+      { name: 'HTML', icon: 'html5', color: '#E34F26' },
+      { name: 'CSS', icon: 'css3', color: '#1572B6' },
+      { name: 'Bootstrap', icon: 'bootstrap', color: '#7952B3' }
+    ],
+    Backend: [
+      { name: 'Node.js', icon: 'nodedotjs', color: '#5FA04E' },
+      { name: 'Express', icon: 'express', color: '#000000' },
+      { name: 'Socket.IO', icon: 'socketdotio', color: '#010101' }
+    ],
+    Databases: [
+      { name: 'MongoDB', icon: 'mongodb', color: '#47A248' },
+      { name: 'MySQL', icon: 'mysql', color: '#4479A1' },
+      { name: 'PostgreSQL', icon: 'postgresql', color: '#4169E1' }
+    ],
+    Tools: [
+      { name: 'Git', icon: 'git', color: '#F05032' },
+      { name: 'GitHub', icon: 'github', color: '#181717' },
+      { name: 'Postman', icon: 'postman', color: '#FF6C37' },
+      { name: 'Vercel', icon: 'vercel', color: '#000000' },
+      { name: 'VS Code', icon: 'code', color: '#007ACC' },
+      { name: 'Cloudinary', icon: 'cloudinary', color: '#3448C5' }
+    ]
+  },
 
   // Curated, in display order. `status: 'Building'` marks work in progress.
   projects: [

@@ -18,6 +18,7 @@ import { readFile, writeFile, mkdir, readdir, unlink } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import assert from 'node:assert';
 import config from '../profile.config.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -208,7 +209,8 @@ const ICON = {
   graph: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 1.5v13h13"/><path d="M4 10l3-3 2.5 2.5L14 5"/></g>`,
   commit: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M1 8h4M11 8h4"/></g>`,
   pulse: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h3l2-5 4 10 2-5h3"/></g>`,
-  arrow: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5l7-7M6 4.5h5.5V10"/></g>`
+  arrow: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5l7-7M6 4.5h5.5V10"/></g>`,
+  stack: (x, y, color) => `<g transform="translate(${x} ${y})" fill="none" stroke="${color}" stroke-width="1.6" stroke-linejoin="round"><path d="M8 1.5l6.5 3.5L8 8.5 1.5 5 8 1.5Z"/><path d="M1.5 8L8 11.5 14.5 8M1.5 11L8 14.5 14.5 11" stroke-linecap="round"/></g>`
 };
 
 // ---------------------------------------------------------------- components
@@ -458,6 +460,93 @@ const heading = async (theme, icon, text, hint) => {
   });
 };
 
+// ---- tech stack
+
+// WCAG relative luminance / contrast, used to keep brand colours readable.
+const lum = (hex) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const contrast = (a, b) => {
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+const mix = (hex, toward, t) => `#${[1, 3, 5].map((i) => {
+  const a = parseInt(hex.slice(i, i + 2), 16);
+  const b = parseInt(toward.slice(i, i + 2), 16);
+  return Math.round(a + (b - a) * t).toString(16).padStart(2, '0');
+}).join('')}`;
+// Brand colour that reads on the tile. Neutral marks (black Next.js, Express,
+// Vercel) take the theme's text colour, as GitHub shows them; coloured marks
+// are nudged toward white (dark) or black (light), keeping their hue.
+const readable = (brand, bg, dark, fg) => {
+  const ch = [1, 3, 5].map((i) => parseInt(brand.slice(i, i + 2), 16));
+  if (Math.max(...ch) - Math.min(...ch) < 24 && contrast(brand, bg) < 4) return fg;
+  let out = brand.toLowerCase();
+  for (let t = 0.1; contrast(out, bg) < 4 && t <= 1; t += 0.1) out = mix(brand, dark ? '#ffffff' : '#000000', t);
+  return out;
+};
+
+// Logo path from Simple Icons (CC0), fetched once per build. Two drawn
+// fallbacks cover techs Simple Icons doesn't carry.
+const DRAWN = {
+  db: '<ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v13c0 1.55 3.36 2.8 7.5 2.8s7.5-1.25 7.5-2.8v-13M4.5 12c0 1.55 3.36 2.8 7.5 2.8s7.5-1.25 7.5-2.8"/>',
+  code: '<path d="M8 6.5L2.5 12 8 17.5M16 6.5l5.5 5.5-5.5 5.5M13.6 3.5l-3.2 17"/>'
+};
+const iconCache = new Map();
+const iconPath = (slug) => {
+  if (DRAWN[slug]) return Promise.resolve(null);
+  if (!iconCache.has(slug)) {
+    iconCache.set(slug, fetch(`https://cdn.jsdelivr.net/npm/simple-icons@13/icons/${slug}.svg`, { signal: AbortSignal.timeout(15000) })
+      .then((r) => (r.ok ? r.text() : ''))
+      .then((svg) => (svg.match(/ d="([^"]+)"/) || [])[1] || null)
+      .catch(() => null));
+  }
+  return iconCache.get(slug);
+};
+
+const techStack = async (theme) => {
+  const d = new Doc(theme);
+  const c = d.c;
+  const dark = theme === 'dark';
+  const TILE = 104;
+  const GAP = 12;
+  const X0 = 212;
+  const ROW = TILE + 32;
+  const groups = Object.entries(config.stack);
+  const H = 28 + groups.length * ROW;
+  const rows = await Promise.all(groups.map(async ([group, items], g) => {
+    const y = 28 + g * ROW;
+    const tiles = await Promise.all(items.map(async (tech, k) => {
+      const x = X0 + k * (TILE + GAP);
+      const color = readable(tech.color, c.canvas, dark, c.fg);
+      assert(contrast(color, c.canvas) >= 4, `${tech.name} logo unreadable on ${theme}`);
+      const d24 = await iconPath(tech.icon);
+      const glyph = d24
+        ? `<path d="${d24}" fill="${color}"/>`
+        : `<g fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${DRAWN[tech.icon] || DRAWN.code}</g>`;
+      return `<g class="up" ${delay((g * 3 + k) * 45)}>
+    <rect x="${x + 0.5}" y="${y + 0.5}" width="${TILE - 1}" height="${TILE - 1}" rx="16" fill="${c.canvas}" stroke="${c.border}"/>
+    <circle cx="${x + TILE / 2}" cy="${y + 42}" r="27" fill="${color}" fill-opacity="${dark ? 0.12 : 0.08}"/>
+    <g transform="translate(${x + TILE / 2 - 17} ${y + 25}) scale(${34 / 24})">${glyph}</g>
+    <text x="${x + TILE / 2}" y="${y + 88}" text-anchor="middle" class="s" font-size="13" font-weight="600" fill="${c.fg2}" ${fit('sans', 13, tech.name, TILE - 14)}>${d.t(tech.name)}</text>
+  </g>`;
+    }));
+    return `${g ? `<line x1="32" y1="${y - 16}" x2="${W - 32}" y2="${y - 16}" stroke="${c.borderMuted}"/>` : ''}
+  <text x="40" y="${y + 48}" class="s" font-size="17" font-weight="650" fill="${c.fg}">${d.t(group)}</text>
+  <text x="40" y="${y + 72}" class="m" font-size="12" fill="${c.muted}">${d.m(`${items.length} ${items.length === 1 ? 'tool' : 'tools'}`)}</text>
+  ${tiles.join('')}`;
+  }));
+
+  return d.render({
+    height: H,
+    title: `Tech stack: ${groups.map(([group, items]) => `${group}: ${items.map((t) => t.name).join(', ')}`).join('. ')}.`,
+    body: `<rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="18" fill="${c.subtle}" stroke="${c.border}"/>
+${rows.join('')}`
+  });
+};
+
 // Pinned-repo card with live language / stars / forks.
 const pinCard = async (theme, p, repo, index) => {
   const d = new Doc(theme);
@@ -683,6 +772,10 @@ ${pic('hero', `${config.name} (@${config.user}). ${data.role ? `${data.role.role
 
 ${pic('insights', 'Insights: contributions, repositories, problems solved and top languages.')}
 
+${pic('h-stack', 'Tech stack')}
+
+${pic('stack', `Tech stack: ${Object.entries(config.stack).map(([g, items]) => `${g}: ${items.map((t) => t.name).join(', ')}`).join('. ')}.`)}
+
 ${pic('h-pinned', 'Pinned')}
 
 ${pairs.join('\n\n')}
@@ -728,6 +821,8 @@ const main = async () => {
   console.log('Rendering SVGs');
   await both('hero', (t) => hero(t, data, avatar));
   await both('insights', (t) => insights(t, data));
+  await both('h-stack', (t) => heading(t, 'stack', 'Tech stack', `${Object.values(config.stack).flat().length} technologies`));
+  await both('stack', (t) => techStack(t));
   await both('h-pinned', (t) => heading(t, 'pin', 'Pinned', `${config.projects.length} repositories`));
   await both('h-activity', (t) => heading(t, 'graph', 'Contribution activity', 'live from the GitHub API'));
   await both('h-writing', (t) => heading(t, 'commit', 'Writing', 'git log --oneline hashnode'));
@@ -752,7 +847,7 @@ const main = async () => {
   }
 
   await writeFile(path.join(ROOT, 'README.md'), readme(data, cards, commits));
-  console.log(`Done: README.md + ${2 * (7 + cards.length + commits.length)} SVGs in assets/`);
+  console.log(`Done: README.md + ${2 * (9 + cards.length + commits.length)} SVGs in assets/`);
 };
 
 main().catch((e) => {
