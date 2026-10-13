@@ -5,6 +5,10 @@
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/insights-dark.svg"><img src="assets/insights-light.svg" width="100%" alt="Insights: contributions, repositories, problems solved and top languages."></picture>
 
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/h-stack-dark.svg"><img src="assets/h-stack-light.svg" width="100%" alt="Tech stack"></picture>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/stack-dark.svg"><img src="assets/stack-light.svg" width="100%" alt="Tech stack: Languages: JavaScript, Java, SQL, PL/SQL. Frontend: React, Next.js, Redux, Tailwind CSS, HTML, CSS, Bootstrap. Backend: Node.js, Express, Socket.IO. Databases: MongoDB, MySQL, PostgreSQL. Tools: Git, GitHub, Postman, Vercel, VS Code, Cloudinary."></picture>
+
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/h-pinned-dark.svg"><img src="assets/h-pinned-light.svg" width="100%" alt="Pinned"></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/pin-1-dark.svg"><img src="assets/pin-1-light.svg" width="49%" alt="DriveEase: Peer-to-peer vehicle rental marketplace for Indian cities."></picture> <a href="https://readme-craft-sg.vercel.app"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/pin-2-dark.svg"><img src="assets/pin-2-light.svg" width="49%" alt="README Craft: GitHub profile README generator with GitHub OAuth login."></picture></a>
@@ -31,6 +35,6 @@
 
 <a href="https://sahilgupta.tech">sahilgupta.tech</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/sahil-gupta-35199620a/">LinkedIn</a> &nbsp;·&nbsp; <a href="https://sahilxdev.hashnode.dev">Hashnode</a> &nbsp;·&nbsp; <a href="https://peerlist.io/sahilgupta2175">Peerlist</a> &nbsp;·&nbsp; <a href="mailto:guptasahil2175@gmail.com">Email</a>
 
-<sub>Synced Tue, 13 Oct 2026 07:00 UTC from my portfolio's admin panel, Hashnode and the GitHub API.</sub>
+<sub>Synced Tue, 13 Oct 2026 15:51 UTC from my portfolio's admin panel, Hashnode and the GitHub API.</sub>
 
 </div>
