@@ -44,13 +44,13 @@
     }
   ],
   "github": {
-    "repos": 42,
+    "repos": 41,
     "since": 2022,
     "avatarUrl": "https://avatars.githubusercontent.com/u/115523135?v=4",
     "languages": [
       {
         "name": "JavaScript",
-        "count": 15
+        "count": 14
       },
       {
         "name": "HTML",
@@ -221,13 +221,8 @@
         "forks": 0,
         "language": "CSS"
       },
-      "sahil-gupta-portfolio": {
-        "stars": 0,
-        "forks": 0,
-        "language": "JavaScript"
-      },
       "sahilgupta2175": {
-        "stars": 0,
+        "stars": 1,
         "forks": 0,
         "language": "JavaScript"
       },
@@ -277,43 +272,8 @@
         "language": "HTML"
       }
     },
-    "contributions": 228,
+    "contributions": 235,
     "calendar": [
-      [
-        "2025-10-19",
-        0,
-        0
-      ],
-      [
-        "2025-10-20",
-        0,
-        0
-      ],
-      [
-        "2025-10-21",
-        0,
-        0
-      ],
-      [
-        "2025-10-22",
-        0,
-        0
-      ],
-      [
-        "2025-10-23",
-        0,
-        0
-      ],
-      [
-        "2025-10-24",
-        0,
-        0
-      ],
-      [
-        "2025-10-25",
-        0,
-        0
-      ],
       [
         "2025-10-26",
         0,
@@ -2131,6 +2091,11 @@
       ],
       [
         "2026-10-24",
+        7,
+        2
+      ],
+      [
+        "2026-10-25",
         0,
         0
       ]
@@ -2147,8 +2112,8 @@
       8,
       11,
       67,
-      105
+      112
     ]
   },
-  "updatedAt": "2026-10-24T04:55:52.258Z"
+  "updatedAt": "2026-10-25T05:08:33.841Z"
 }
